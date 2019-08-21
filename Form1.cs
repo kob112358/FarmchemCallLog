@@ -11,6 +11,8 @@ using System.Data.SqlClient;
 using System.Net;
 using System.Net.Mail;
 using FluentValidation;
+using DAL;
+using BLL;
 
 namespace FarmchemCallLog
 {
@@ -19,6 +21,7 @@ namespace FarmchemCallLog
         public rgaForm rga;
         private SqlConnection _con = new SqlConnection("data source=kobpc\\sqlexpress;initial catalog=modifycalllog;integrated security=true;Connect Timeout=60");
         private DataTable _dt;
+        BusinessLogicLayer bll = new BusinessLogicLayer();
 
 
 
@@ -32,205 +35,202 @@ namespace FarmchemCallLog
         //populates contactNameField and updates displayed info to calls from phone
         private void ContactPhone_Leave(object sender, EventArgs e)
         {
-            try
+            contactPhone.Text.Trim();
+            
+            //don't populate anything if no phone number selected
+            if (contactPhone.Text == "")
             {
-                //don't populate anything if no phone number selected
-                if (contactPhone.Text == "")
-                {
-                    return;
-                }
-                ClearCallerData();
+                return;
+            }
+            ClearCallerData();
 
-                //populate contactName field
-                //will want to repopulate after this field is left and selected
-                contactName.Items.Clear();
-                PopulateNameField();
+            //populate contactName field
+            //will want to repopulate after this field is left and selected
+            contactName.Items.Clear();
+            contactName.Items.AddRange(bll.GetNameField(contactPhone.Text));
+            contactName.Text = contactName.Items[0].ToString();
                 //populate the rest of form based on top contact name chosen
                 //SQL query to populate the remainder of the form
 
-                PopulateCustomerEmail();
-                PopulateCompanyName();
-                PopulateDataGridViewByPhoneCompanyCity();
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+                //PopulateCustomerEmail();
+                //PopulateCompanyName();
+                //PopulateDataGridViewByPhoneCompanyCity();
+            
+            
             
         }
         //populates Email/Customer code based on Contact selected
         private void ContactName_Leave(object sender, EventArgs e)
         {
-            try
-            {
-                contactEmail.Text = "";
-                contactEmail.Items.Clear();
-                PopulateCustomerEmail();
-                PopulateCompanyName();
-            }
-            catch (Exception)
-            {
+        //    try
+        //    {
+        //        contactEmail.Text = "";
+        //        contactEmail.Items.Clear();
+        //        PopulateCustomerEmail();
+        //        PopulateCompanyName();
+        //    }
+        //    catch (Exception)
+        //    {
 
-                throw;
-            }
+        //        throw;
+        //    }
         }
 
         public void PopulateCompanyName()
         {
-            //populate companyName field
-            //uses customerCode
-            companyName.Items.Clear();
-            var adapter = new SqlDataAdapter("SELECT TOP (1) companyName FROM modify_data_calllog WHERE customerCode LIKE '%' + @customerCode + '%' GROUP BY companyName ORDER BY companyName DESC", _con);
-            adapter.SelectCommand.Parameters.AddWithValue("customerCode", customerCode.Text.Trim());
-            FormOneAutopopulateField(adapter, companyName);
-            PopulateCompanyCity();
+        //    //populate companyName field
+        //    //uses customerCode
+        //    companyName.Items.Clear();
+        //    var adapter = new SqlDataAdapter("SELECT TOP (1) companyName FROM modify_data_calllog WHERE customerCode LIKE '%' + @customerCode + '%' GROUP BY companyName ORDER BY companyName DESC", _con);
+        //    adapter.SelectCommand.Parameters.AddWithValue("customerCode", customerCode.Text.Trim());
+        //    FormOneAutopopulateField(adapter, companyName);
+        //    PopulateCompanyCity();
         }
 
         public void PopulateCompanyCity()
         {
-            //populate companyCity field
-            //uses searchPhone and customerCode
-            companyCity.Items.Clear();
-            var adapter = new SqlDataAdapter("SELECT TOP (3) companyCity FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' AND customerCode LIKE '%' + @customerCode + '%' GROUP BY companyCity ORDER BY COUNT(companyCity) DESC", _con);
-            adapter.SelectCommand.Parameters.AddWithValue("customerCode", customerCode.Text.Trim());
-            adapter.SelectCommand.Parameters.AddWithValue("contactPhone", contactPhone.Text.Trim());
-            FormOneAutopopulateField(adapter, companyCity);
-            PopulateCompanyState();
+        //    //populate companyCity field
+        //    //uses searchPhone and customerCode
+        //    companyCity.Items.Clear();
+        //    var adapter = new SqlDataAdapter("SELECT TOP (3) companyCity FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' AND customerCode LIKE '%' + @customerCode + '%' GROUP BY companyCity ORDER BY COUNT(companyCity) DESC", _con);
+        //    adapter.SelectCommand.Parameters.AddWithValue("customerCode", customerCode.Text.Trim());
+        //    adapter.SelectCommand.Parameters.AddWithValue("contactPhone", contactPhone.Text.Trim());
+        //    FormOneAutopopulateField(adapter, companyCity);
+        //    PopulateCompanyState();
         }
 
         public void PopulateCompanyState()
         {
-            //populate companyState field
-            //uses searchPhone and searchCity to find the state
-            companyState.Items.Clear();
-            var adapter = new SqlDataAdapter("SELECT TOP (3) companyState FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' AND customerCode LIKE '%' + @customerCode + '%' GROUP BY companyState ORDER BY COUNT(companyState) DESC", _con);
-            adapter.SelectCommand.Parameters.AddWithValue("customerCode", customerCode.Text.Trim());
-            adapter.SelectCommand.Parameters.AddWithValue("contactPhone", contactPhone.Text.Trim());
-            FormOneAutopopulateField(adapter, companyState);
-            PopulateCompanyZip();
+        //    //populate companyState field
+        //    //uses searchPhone and searchCity to find the state
+        //    companyState.Items.Clear();
+        //    var adapter = new SqlDataAdapter("SELECT TOP (3) companyState FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' AND customerCode LIKE '%' + @customerCode + '%' GROUP BY companyState ORDER BY COUNT(companyState) DESC", _con);
+        //    adapter.SelectCommand.Parameters.AddWithValue("customerCode", customerCode.Text.Trim());
+        //    adapter.SelectCommand.Parameters.AddWithValue("contactPhone", contactPhone.Text.Trim());
+        //    FormOneAutopopulateField(adapter, companyState);
+        //    PopulateCompanyZip();
         }
         
         public void PopulateCompanyZip()
         {
-            //populate companyZip field
-            // uses city and state fields
-            companyZip.Items.Clear();
-            var adapter = new SqlDataAdapter("SELECT TOP (3) companyZip FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' AND customerCode LIKE '%' + @customerCode + '%' GROUP BY companyZip ORDER BY COUNT(companyZip) DESC", _con);
-            adapter.SelectCommand.Parameters.AddWithValue("customerCode", customerCode.Text.Trim());
-            adapter.SelectCommand.Parameters.AddWithValue("contactPhone", contactPhone.Text.Trim());
-            FormOneAutopopulateField(adapter, companyZip);
+        //    //populate companyZip field
+        //    // uses city and state fields
+        //    companyZip.Items.Clear();
+        //    var adapter = new SqlDataAdapter("SELECT TOP (3) companyZip FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' AND customerCode LIKE '%' + @customerCode + '%' GROUP BY companyZip ORDER BY COUNT(companyZip) DESC", _con);
+        //    adapter.SelectCommand.Parameters.AddWithValue("customerCode", customerCode.Text.Trim());
+        //    adapter.SelectCommand.Parameters.AddWithValue("contactPhone", contactPhone.Text.Trim());
+        //    FormOneAutopopulateField(adapter, companyZip);
         }
           
 
 
         public void PopulateNameField()
         {
-            var adapter = new SqlDataAdapter("SELECT contactName, COUNT(contactName) AS MOST_FREQUENT FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' GROUP BY contactName ORDER BY MOST_FREQUENT DESC", _con);
-            adapter.SelectCommand.Parameters.AddWithValue("contactPhone", contactPhone.Text.Trim());
-            FormOneAutopopulateField(adapter, contactName);
+        //    var adapter = new SqlDataAdapter("SELECT contactName, COUNT(contactName) AS MOST_FREQUENT FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' GROUP BY contactName ORDER BY MOST_FREQUENT DESC", _con);
+        //    adapter.SelectCommand.Parameters.AddWithValue("contactPhone", contactPhone.Text.Trim());
+        //    FormOneAutopopulateField(adapter, contactName);
         }
-        //populates email and customer code fields
+        ////populates email and customer code fields
         public void PopulateCustomerEmail()
         {
-            //if there isn't a contactName selected it should leave whatever has already been populated
-            if (contactName.Items.Count == 0)
-            {
-                return;
-            }
-            //populate contactEmail field
-            //uses searchPhone and searchName
-            contactEmail.Items.Clear();
-            var adapter = new SqlDataAdapter("SELECT contactEmail, COUNT(contactEmail) AS MOST_FREQUENT FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' AND contactName LIKE '%' + @contactName + '%' GROUP BY contactEmail ORDER BY MOST_FREQUENT DESC", _con);
-            adapter.SelectCommand.Parameters.AddWithValue("contactPhone", contactPhone.Text.Trim());
-            adapter.SelectCommand.Parameters.AddWithValue("contactName", contactName.Text.Trim());
-            FormOneAutopopulateField(adapter, contactEmail);
-            PopulateCustomerCode();
+        //    //if there isn't a contactName selected it should leave whatever has already been populated
+        //    if (contactName.Items.Count == 0)
+        //    {
+        //        return;
+        //    }
+        //    //populate contactEmail field
+        //    //uses searchPhone and searchName
+        //    contactEmail.Items.Clear();
+        //    var adapter = new SqlDataAdapter("SELECT contactEmail, COUNT(contactEmail) AS MOST_FREQUENT FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' AND contactName LIKE '%' + @contactName + '%' GROUP BY contactEmail ORDER BY MOST_FREQUENT DESC", _con);
+        //    adapter.SelectCommand.Parameters.AddWithValue("contactPhone", contactPhone.Text.Trim());
+        //    adapter.SelectCommand.Parameters.AddWithValue("contactName", contactName.Text.Trim());
+        //    FormOneAutopopulateField(adapter, contactEmail);
+        //    PopulateCustomerCode();
         }
 
         public void PopulateCustomerCode()
         { 
-            //populate all customerCode fields
-            //uses searchPhone and searchName
-            customerCode.Items.Clear();
-            var adapter = new SqlDataAdapter("SELECT customerCode, COUNT(customerCode) AS MOST_FREQUENT FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' AND contactName LIKE '%' + @contactName + '%' GROUP BY customerCode ORDER BY MOST_FREQUENT DESC", _con);
-            adapter.SelectCommand.Parameters.AddWithValue("contactPhone", contactPhone.Text.Trim());
-            adapter.SelectCommand.Parameters.AddWithValue("contactName", contactName.Text.Trim());
-            FormOneAutopopulateField(adapter, customerCode);
+        //    //populate all customerCode fields
+        //    //uses searchPhone and searchName
+        //    customerCode.Items.Clear();
+        //    var adapter = new SqlDataAdapter("SELECT customerCode, COUNT(customerCode) AS MOST_FREQUENT FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' AND contactName LIKE '%' + @contactName + '%' GROUP BY customerCode ORDER BY MOST_FREQUENT DESC", _con);
+        //    adapter.SelectCommand.Parameters.AddWithValue("contactPhone", contactPhone.Text.Trim());
+        //    adapter.SelectCommand.Parameters.AddWithValue("contactName", contactName.Text.Trim());
+        //    FormOneAutopopulateField(adapter, customerCode);
         }
 
 
 
         public void FormOneAutopopulateField(SqlDataAdapter da, ComboBox field)
         {
-            try
-            {
-                _dt = new DataTable();
-                da.Fill(_dt);
-                //fill the combobox with the fields extracted from the sql query
-                for (int i = 0; i < _dt.Rows.Count; i++)
-                {
-                    if (_dt.Rows[i][field.Name].ToString() == "" || _dt.Rows[i][field.Name] == null)
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        field.Items.Add(_dt.Rows[i][field.Name]);
-                    }
-                }
-                if (field.Items.Count == 0)
-                {
-                    field.SelectedItem = "";
-                }
-                else
-                {
-                    field.SelectedItem = field.Items[0];
-                }
-            }
-            catch (Exception)
-            {
+        //    try
+        //    {
+        //        _dt = new DataTable();
+        //        da.Fill(_dt);
+        //        //fill the combobox with the fields extracted from the sql query
+        //        for (int i = 0; i < _dt.Rows.Count; i++)
+        //        {
+        //            if (_dt.Rows[i][field.Name].ToString() == "" || _dt.Rows[i][field.Name] == null)
+        //            {
+        //                continue;
+        //            }
+        //            else
+        //            {
+        //                field.Items.Add(_dt.Rows[i][field.Name]);
+        //            }
+        //        }
+        //        if (field.Items.Count == 0)
+        //        {
+        //            field.SelectedItem = "";
+        //        }
+        //        else
+        //        {
+        //            field.SelectedItem = field.Items[0];
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
 
-                throw;
-            }
+        //        throw;
+        //    }
         }
 
 
         public void PopulateDataGridViewByPhoneCompanyCity()
         {
-            try
-            {
-                if (contactPhone.Text == "")
-                {
-                    return;
-                }
-                var adapter = new SqlDataAdapter("SELECT * FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' OR (companyName LIKE '%' + @companyName + '%' AND companyCity LIKE '%' + @companyCity + '%')", _con);
-                adapter.SelectCommand.Parameters.AddWithValue("contactPhone", contactPhone.Text.Trim());
-                adapter.SelectCommand.Parameters.AddWithValue("companyName", companyName.Text.Trim());
-                adapter.SelectCommand.Parameters.AddWithValue("companyCity", companyCity.Text.Trim());
-                _dt = new DataTable();
-                adapter.Fill(_dt);
-                dataGridView1.DataSource = _dt;
-            }
-            catch (Exception)
-            {
+        //    try
+        //    {
+        //        if (contactPhone.Text == "")
+        //        {
+        //            return;
+        //        }
+        //        var adapter = new SqlDataAdapter("SELECT * FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' OR (companyName LIKE '%' + @companyName + '%' AND companyCity LIKE '%' + @companyCity + '%')", _con);
+        //        adapter.SelectCommand.Parameters.AddWithValue("contactPhone", contactPhone.Text.Trim());
+        //        adapter.SelectCommand.Parameters.AddWithValue("companyName", companyName.Text.Trim());
+        //        adapter.SelectCommand.Parameters.AddWithValue("companyCity", companyCity.Text.Trim());
+        //        _dt = new DataTable();
+        //        adapter.Fill(_dt);
+        //        dataGridView1.DataSource = _dt;
+        //    }
+        //    catch (Exception)
+        //    {
 
-                throw;
-            }
+        //        throw;
+        //    }
         }
 
         // 'Save' button that saves everything into sql database
         private void BtnSave_Click(object sender, EventArgs e)
         {
-            if (SaveFormToDatabase() != 0)
-            {
-                MessageBox.Show("saved");
-            }
-            else
-            {
-                MessageBox.Show("error");
-            }
-            PopulateDataGridViewByPhoneCompanyCity();
+        //    if (SaveFormToDatabase() != 0)
+        //    {
+        //        MessageBox.Show("saved");
+        //    }
+        //    else
+        //    {
+        //        MessageBox.Show("error");
+        //    }
+        //    PopulateDataGridViewByPhoneCompanyCity();
         }
 
         public int SaveFormToDatabase()

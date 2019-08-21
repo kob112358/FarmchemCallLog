@@ -31,3 +31,8 @@ C:\Users\Kob\source\repos\FarmchemCallLog\bin\Debug\FluentValidation.dll
 C:\Users\Kob\source\repos\FarmchemCallLog\bin\Debug\System.ComponentModel.Annotations.dll
 C:\Users\Kob\source\repos\FarmchemCallLog\bin\Debug\FluentFTP.xml
 C:\Users\Kob\source\repos\FarmchemCallLog\bin\Debug\FluentValidation.xml
+C:\Users\Kob\source\repos\FarmchemCallLog\bin\Debug\BLL.dll
+C:\Users\Kob\source\repos\FarmchemCallLog\bin\Debug\DAL.dll
+C:\Users\Kob\source\repos\FarmchemCallLog\bin\Debug\System.Data.SqlClient.dll
+C:\Users\Kob\source\repos\FarmchemCallLog\bin\Debug\BLL.pdb
+C:\Users\Kob\source\repos\FarmchemCallLog\bin\Debug\DAL.pdb
