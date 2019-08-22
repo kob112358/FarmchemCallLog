@@ -357,18 +357,5 @@ namespace FarmchemCallLog
         }
 
 
-
-
-
-
-        //1a.Correct item(s) ordered; but wrong item(s) shipped - _________(Bruce Carr initials)
-        //    1b.Customer ordered wrong item(s)
-        //    1c.Order entered incorrectly by salesman - _________(James Bluhm initials)
-        //1d. Item(s) no longer needed
-        //1e. Defective item(s) Vender is responsible for repair/replacement/shipping charges. Work through vendor for warranty claim.*
-        //1f. Item(s) received damaged by shipping company - ("damaged" must be noted on the delivery receipt to turn in claim)*
-        //1g. Fusion Rental Return _________ Fax or Email for BOL ____________________________________________________
-        //1h. Other/Comments -  
-
     }
 }
