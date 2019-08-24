@@ -299,12 +299,12 @@
             // 
             this.Return_Ship_Method.FormattingEnabled = true;
             this.Return_Ship_Method.Items.AddRange(new object[] {
-            "Not cost effective to return. Advised dealer to dispose",
-            "Customer is responsible for returning",
-            "Shipping label by FarmChem and Farmchem pays return freight charge",
-            "Shipping label by FarmChem and customer is to be invoiced for return freight char" +
-                "ge",
-            "Rep will be returning"});
+            "a. Not cost effective to return. Advised dealer to dispose",
+            "b. Customer is responsible for returning",
+            "c. Shipping label by FarmChem and Farmchem pays return freight charge",
+            "d. Shipping label by FarmChem and customer is to be invoiced for return freight c" +
+                "harge",
+            "e. Rep will be returning"});
             this.Return_Ship_Method.Location = new System.Drawing.Point(38, 404);
             this.Return_Ship_Method.Name = "Return_Ship_Method";
             this.Return_Ship_Method.Size = new System.Drawing.Size(421, 21);
@@ -838,7 +838,7 @@
             this.btnEmailShipping.TabIndex = 116;
             this.btnEmailShipping.Text = "Send email to shipping";
             this.btnEmailShipping.UseVisualStyleBackColor = true;
-            this.btnEmailShipping.Click += new System.EventHandler(this.Button1_Click);
+            this.btnEmailShipping.Click += new System.EventHandler(this.SendToShipping_Click);
             // 
             // btnCustomerEmail
             // 
@@ -1054,7 +1054,7 @@
             this.button1.TabIndex = 144;
             this.button1.Text = "Load";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.LoadRgaFormByRecord_Click);
+            this.button1.Click += new System.EventHandler(this.LoadRgaFormByRecordNumber_Click);
             // 
             // label47
             // 

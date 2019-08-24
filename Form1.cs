@@ -33,7 +33,6 @@ namespace FarmchemCallLog
         //populates contactNameField and updates displayed info to calls from phone
         private void ContactPhone_Leave(object sender, EventArgs e)
         {
-            //don't populate anything if there is no phone #
             if (contactPhone.Text == "")
             {
                 return;
@@ -46,24 +45,36 @@ namespace FarmchemCallLog
                 SetCustomerCode();
                 SetCompanyName();
                 SetCityStateZip();
-                //PopulateDataGridViewByPhoneCompanyCity();
+                PopulateDataGridViewByPhoneCompanyCity();
             }
+
         }
-        //populates Email/Customer code based on Contact selected
         private void ContactName_Leave(object sender, EventArgs e)
         {
-            try
-            {
                 SetEmail();
                 SetCompanyName();
                 SetCityStateZip();
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
         }
+
+        public void PopulateDataGridViewByPhoneCompanyCity()
+        {
+            dataGridView1.DataSource = bll.GetGridViewData(contactPhone.Text, companyName.Text, companyCity.Text);
+        }
+
+        private void BtnSave_Click(object sender, EventArgs e)
+        {
+            if (SaveFormToDatabase() != 0)
+            {
+                MessageBox.Show("saved");
+            }
+            else
+            {
+                MessageBox.Show("error");
+            }
+            PopulateDataGridViewByPhoneCompanyCity();
+        }
+
+
 
         private void SetContactName()
         {
@@ -112,82 +123,14 @@ namespace FarmchemCallLog
             companyZip.Text = bll.GetCompanyZip(contactPhone.Text, customerCode.Text);
         }
 
-
-
-
-        public void PopulateDataGridViewByPhoneCompanyCity()
-        {
-        //    try
-        //    {
-        //        if (contactPhone.Text == "")
-        //        {
-        //            return;
-        //        }
-        //        var adapter = new SqlDataAdapter("SELECT * FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' OR (companyName LIKE '%' + @companyName + '%' AND companyCity LIKE '%' + @companyCity + '%')", _con);
-        //        adapter.SelectCommand.Parameters.AddWithValue("contactPhone", contactPhone.Text.Trim());
-        //        adapter.SelectCommand.Parameters.AddWithValue("companyName", companyName.Text.Trim());
-        //        adapter.SelectCommand.Parameters.AddWithValue("companyCity", companyCity.Text.Trim());
-        //        _dt = new DataTable();
-        //        adapter.Fill(_dt);
-        //        dataGridView1.DataSource = _dt;
-        //    }
-        //    catch (Exception)
-        //    {
-
-        //        throw;
-        //    }
-        }
-
-        // 'Save' button that saves everything into sql database
-        private void BtnSave_Click(object sender, EventArgs e)
-        {
-        //    if (SaveFormToDatabase() != 0)
-        //    {
-        //        MessageBox.Show("saved");
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("error");
-        //    }
-        //    PopulateDataGridViewByPhoneCompanyCity();
-        }
-
         public int SaveFormToDatabase()
         {
-            //var cmd = new SqlCommand("insert into modify_data_CallLog(contactPhone,contactName,contactEmail,customercode,companyName,companyCity,companyState,companyZip,originalSO,partNumber,reasonForCall,notesParagraph,callDate) values (@contactPhone, @contactName, @contactEmail, @customerCode, @companyName, @companyCity, @companyState, @companyZip, @originalSalesOrder, @partNumber, @reasonForCall, @notesParagraph, @callDate)", _con);
-            //AddCallLogParamtersToCmd(ref cmd);
-            //try
-            //{
-            //    _con.Open();
-            //    return cmd.ExecuteNonQuery();
-            //}
-            //finally
-            //{
-            //    _con.Close();
-            //}
-            return 1;
-
+            return bll.SaveToDatabase(contactPhone.Text, contactName.Text, contactEmail.Text, customerCode.Text, companyName.Text, companyCity.Text, companyState.Text, companyZip.Text, originalSalesOrder.Text, partNumber.Text, reasonForCall.Text, notesParagraph.Text, callDate.Text);
         }
 
-        private SqlCommand AddCallLogParamtersToCmd(ref SqlCommand thisCmd)
-        {
-            thisCmd.Parameters.AddWithValue("@contactPhone", contactPhone.Text.Trim());
-            thisCmd.Parameters.AddWithValue("@contactName", contactName.Text.Trim());
-            thisCmd.Parameters.AddWithValue("@contactEmail", contactEmail.Text.Trim());
-            thisCmd.Parameters.AddWithValue("@customerCode", customerCode.Text.Trim());
-            thisCmd.Parameters.AddWithValue("@companyName", companyName.Text.Trim());
-            thisCmd.Parameters.AddWithValue("@companyCity", companyCity.Text.Trim());
-            thisCmd.Parameters.AddWithValue("@companyState", companyState.Text.Trim());
-            thisCmd.Parameters.AddWithValue("@companyZip", companyZip.Text.Trim());
-            thisCmd.Parameters.AddWithValue("@originalSalesOrder", originalSalesOrder.Text.Trim());
-            thisCmd.Parameters.AddWithValue("@partNumber", partNumber.Text.Trim());
-            thisCmd.Parameters.AddWithValue("@reasonForCall", reasonForCall.Text.Trim());
-            thisCmd.Parameters.AddWithValue("@notesParagraph", notesParagraph.Text.Trim());
-            thisCmd.Parameters.AddWithValue("@callDate", callDate.Text.Trim());
-            return thisCmd;
-        }
+        //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        //adds reps email to the email list 
+
         private void AddRepToEmail_Click(object sender, EventArgs e)
         {
             try
@@ -197,11 +140,10 @@ namespace FarmchemCallLog
                     return;
                 }
                 emails.Text += repEmail.Text.Trim() + ";";
-                btnEmailRep.Text += " " + repEmail.Text.Replace("@farmchem.com","");
+                btnEmailRep.Text += " " + repEmail.Text.Replace("@farmchem.com", "");
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -215,7 +157,7 @@ namespace FarmchemCallLog
                 var fromAddress = new MailAddress("fccalllogtest@gmail.com", "Eric Kobliska");
                 //I would use 'emails.Text' in place of erickobliska@gmail.com here
                 var toAddress = new MailAddress("erickobliska@gmail.com", "Eric K");
-                const string fromPassword = "thisispassword";
+                const string FROMPASSWORD = "thisispassword";
                 string subject = reasonForCall.Text + " call from " + contactName.Text + " at " + companyName.Text;
                 string body = contactName.Text + " called from " + companyName.Text + " in " + companyCity.Text + " " + companyState.Text + ". Their contact info is " + contactPhone.Text + " & " + contactEmail.Text + ". The reason they called: " + notesParagraph.Text + ". This would be e-mailed to " + emails.Text;
 
@@ -227,7 +169,7 @@ namespace FarmchemCallLog
                     EnableSsl = true,
                     DeliveryMethod = SmtpDeliveryMethod.Network,
                     UseDefaultCredentials = false,
-                    Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+                    Credentials = new NetworkCredential(fromAddress.Address, FROMPASSWORD)
                 };
                 using (var message = new MailMessage(fromAddress, toAddress)
                 {
@@ -320,8 +262,8 @@ namespace FarmchemCallLog
         {
             try
             {
-                previousCall.Visible = true;
-                previousCall.Text = dataGridView1.CurrentRow.Cells[6].Value.ToString();
+                contactNotes.Visible = true;
+                contactNotes.Text = dataGridView1.CurrentRow.Cells[6].Value.ToString();
             }
             catch (Exception)
             {

@@ -97,7 +97,7 @@
             this.companyStateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.notesParagraphDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.completedDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.previousCall = new System.Windows.Forms.RichTextBox();
+            this.contactNotes = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.table1BindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.table1BindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.databaseCallLogBindingSource)).BeginInit();
@@ -679,14 +679,13 @@
             this.completedDataGridViewTextBoxColumn.Name = "completedDataGridViewTextBoxColumn";
             this.completedDataGridViewTextBoxColumn.Width = 82;
             // 
-            // previousCall
+            // contactNotes
             // 
-            this.previousCall.Location = new System.Drawing.Point(708, 10);
-            this.previousCall.Name = "previousCall";
-            this.previousCall.Size = new System.Drawing.Size(375, 324);
-            this.previousCall.TabIndex = 37;
-            this.previousCall.Text = "";
-            this.previousCall.Visible = false;
+            this.contactNotes.Location = new System.Drawing.Point(708, 10);
+            this.contactNotes.Name = "contactNotes";
+            this.contactNotes.Size = new System.Drawing.Size(375, 324);
+            this.contactNotes.TabIndex = 37;
+            this.contactNotes.Text = "";
             // 
             // Form1
             // 
@@ -694,7 +693,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1169, 620);
             this.Controls.Add(this.dataGridView1);
-            this.Controls.Add(this.previousCall);
+            this.Controls.Add(this.contactNotes);
             this.Controls.Add(this.companyZip);
             this.Controls.Add(this.callDate);
             this.Controls.Add(this.label12);
@@ -820,7 +819,7 @@
         public System.Windows.Forms.ComboBox companyState;
         public System.Windows.Forms.ComboBox companyZip;
         public System.Windows.Forms.DataGridView dataGridView1;
-        public System.Windows.Forms.RichTextBox previousCall;
+        public System.Windows.Forms.RichTextBox contactNotes;
         public System.Windows.Forms.DateTimePicker callDate;
     }
 }
