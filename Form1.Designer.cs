@@ -133,6 +133,7 @@
             // partNumber
             // 
             this.partNumber.AcceptsTab = true;
+            this.partNumber.CausesValidation = false;
             this.partNumber.Location = new System.Drawing.Point(180, 169);
             this.partNumber.Name = "partNumber";
             this.partNumber.Size = new System.Drawing.Size(155, 20);
@@ -150,6 +151,7 @@
             // originalSalesOrder
             // 
             this.originalSalesOrder.AcceptsTab = true;
+            this.originalSalesOrder.CausesValidation = false;
             this.originalSalesOrder.Location = new System.Drawing.Point(341, 169);
             this.originalSalesOrder.Name = "originalSalesOrder";
             this.originalSalesOrder.Size = new System.Drawing.Size(155, 20);
@@ -157,6 +159,7 @@
             // 
             // notesParagraph
             // 
+            this.notesParagraph.CausesValidation = false;
             this.notesParagraph.Location = new System.Drawing.Point(18, 209);
             this.notesParagraph.Name = "notesParagraph";
             this.notesParagraph.Size = new System.Drawing.Size(560, 127);
@@ -402,6 +405,7 @@
             // 
             // reasonForCall
             // 
+            this.reasonForCall.CausesValidation = false;
             this.reasonForCall.FormattingEnabled = true;
             this.reasonForCall.Items.AddRange(new object[] {
             "Product Inquiry",
@@ -424,6 +428,7 @@
             // 
             // callDate
             // 
+            this.callDate.CausesValidation = false;
             this.callDate.Enabled = false;
             this.callDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.callDate.Location = new System.Drawing.Point(24, 5);
@@ -481,22 +486,27 @@
             // 
             this.contactPhone.AcceptsTab = true;
             this.contactPhone.AllowDrop = true;
+            this.contactPhone.CausesValidation = false;
             this.contactPhone.Location = new System.Drawing.Point(103, 48);
             this.contactPhone.Name = "contactPhone";
             this.contactPhone.Size = new System.Drawing.Size(155, 20);
             this.contactPhone.TabIndex = 1;
             this.contactPhone.Leave += new System.EventHandler(this.ContactPhone_Leave);
+            this.contactPhone.Validating += new System.ComponentModel.CancelEventHandler(this.ContactPhone_Validating);
             // 
             // contactEmail
             // 
+            this.contactEmail.CausesValidation = false;
             this.contactEmail.FormattingEnabled = true;
             this.contactEmail.Location = new System.Drawing.Point(19, 89);
             this.contactEmail.Name = "contactEmail";
             this.contactEmail.Size = new System.Drawing.Size(155, 21);
             this.contactEmail.TabIndex = 3;
+            this.contactEmail.Validating += new System.ComponentModel.CancelEventHandler(this.ContactEmail_Validating);
             // 
             // customerCode
             // 
+            this.customerCode.CausesValidation = false;
             this.customerCode.FormattingEnabled = true;
             this.customerCode.Location = new System.Drawing.Point(179, 89);
             this.customerCode.Name = "customerCode";
@@ -514,6 +524,7 @@
             // 
             // companyName
             // 
+            this.companyName.CausesValidation = false;
             this.companyName.FormattingEnabled = true;
             this.companyName.Location = new System.Drawing.Point(340, 89);
             this.companyName.Name = "companyName";
@@ -522,15 +533,18 @@
             // 
             // contactName
             // 
+            this.contactName.CausesValidation = false;
             this.contactName.FormattingEnabled = true;
             this.contactName.Location = new System.Drawing.Point(264, 48);
             this.contactName.Name = "contactName";
             this.contactName.Size = new System.Drawing.Size(155, 21);
             this.contactName.TabIndex = 2;
             this.contactName.Leave += new System.EventHandler(this.ContactName_Leave);
+            this.contactName.Validating += new System.ComponentModel.CancelEventHandler(this.ContactName_Validating);
             // 
             // companyCity
             // 
+            this.companyCity.CausesValidation = false;
             this.companyCity.FormattingEnabled = true;
             this.companyCity.Location = new System.Drawing.Point(18, 129);
             this.companyCity.Name = "companyCity";
@@ -548,11 +562,13 @@
             // 
             // companyState
             // 
+            this.companyState.CausesValidation = false;
             this.companyState.FormattingEnabled = true;
             this.companyState.Location = new System.Drawing.Point(179, 129);
             this.companyState.Name = "companyState";
             this.companyState.Size = new System.Drawing.Size(155, 21);
             this.companyState.TabIndex = 7;
+            this.companyState.Validating += new System.ComponentModel.CancelEventHandler(this.CompanyState_Validating);
             // 
             // label12
             // 
@@ -565,6 +581,7 @@
             // 
             // companyZip
             // 
+            this.companyZip.CausesValidation = false;
             this.companyZip.FormattingEnabled = true;
             this.companyZip.Location = new System.Drawing.Point(340, 129);
             this.companyZip.Name = "companyZip";
@@ -681,6 +698,7 @@
             // 
             // contactNotes
             // 
+            this.contactNotes.CausesValidation = false;
             this.contactNotes.Location = new System.Drawing.Point(708, 10);
             this.contactNotes.Name = "contactNotes";
             this.contactNotes.Size = new System.Drawing.Size(375, 324);

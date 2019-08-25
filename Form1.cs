@@ -13,6 +13,7 @@ using System.Net.Mail;
 using FluentValidation;
 using DAL;
 using BLL;
+using System.Text.RegularExpressions;
 
 namespace FarmchemCallLog
 {
@@ -33,7 +34,7 @@ namespace FarmchemCallLog
         //populates contactNameField and updates displayed info to calls from phone
         private void ContactPhone_Leave(object sender, EventArgs e)
         {
-            if (contactPhone.Text == "")
+            if (!IsPhoneNumber(contactPhone.Text))
             {
                 return;
             }
@@ -51,9 +52,17 @@ namespace FarmchemCallLog
         }
         private void ContactName_Leave(object sender, EventArgs e)
         {
-                SetEmail();
+            try
+            {
+                SetContactEmail();
                 SetCompanyName();
                 SetCityStateZip();
+            }
+            catch
+            {
+                MessageBox.Show("Error populating data with contact name.");
+            }
+                
         }
 
         public void PopulateDataGridViewByPhoneCompanyCity()
@@ -65,11 +74,11 @@ namespace FarmchemCallLog
         {
             if (SaveFormToDatabase() != 0)
             {
-                MessageBox.Show("saved");
+                MessageBox.Show("Saved");
             }
             else
             {
-                MessageBox.Show("error");
+                MessageBox.Show("Did not save form");
             }
             PopulateDataGridViewByPhoneCompanyCity();
         }
@@ -78,6 +87,7 @@ namespace FarmchemCallLog
 
         private void SetContactName()
         {
+            contactName.Text = "";
             contactName.Items.Clear();
             contactName.Items.AddRange(bll.GetNameList(contactPhone.Text));
             contactName.Text = contactName.Items[0].ToString();
@@ -87,14 +97,16 @@ namespace FarmchemCallLog
         {
             contactEmail.Text = "";
             contactEmail.Items.Clear();
-            contactEmail.Text = bll.GetCustomerEmail(contactPhone.Text, contactName.Text);
+            contactEmail.Items.AddRange(bll.GetCustomerEmail(contactPhone.Text, contactName.Text));
+            contactEmail.Text = contactEmail.Items[0].ToString();
         }
 
         private void SetCustomerCode()
         {
             customerCode.Text = "";
             customerCode.Items.Clear();
-            customerCode.Text = bll.GetCustomerCode(contactPhone.Text, contactName.Text);
+            customerCode.Items.AddRange(bll.GetCustomerCode(contactPhone.Text, contactName.Text));
+            customerCode.Text = customerCode.Items[0].ToString();
         }
 
         private void SetCompanyName()
@@ -104,12 +116,6 @@ namespace FarmchemCallLog
             companyName.Text = bll.GetCompanyName(customerCode.Text);
         }
 
-        private void SetEmail()
-        {
-            contactEmail.Text = "";
-            contactEmail.Items.Clear();
-            contactEmail.Text = bll.GetCustomerEmail(contactPhone.Text, contactName.Text);
-        }
 
         private void SetCityStateZip()
         {
@@ -125,11 +131,38 @@ namespace FarmchemCallLog
 
         public int SaveFormToDatabase()
         {
-            return bll.SaveToDatabase(contactPhone.Text, contactName.Text, contactEmail.Text, customerCode.Text, companyName.Text, companyCity.Text, companyState.Text, companyZip.Text, originalSalesOrder.Text, partNumber.Text, reasonForCall.Text, notesParagraph.Text, callDate.Text);
+            TurnValidationOnForAll();
+            if (this.ValidateChildren())
+            {
+                TurnValidationOffForAll();
+                return bll.SaveToDatabase(contactPhone.Text, contactName.Text, contactEmail.Text, customerCode.Text, companyName.Text, companyCity.Text, companyState.Text, companyZip.Text, originalSalesOrder.Text, partNumber.Text, reasonForCall.Text, notesParagraph.Text, callDate.Text);
+                
+            }
+            else
+            {
+                TurnValidationOffForAll();
+                return 0;
+            }
+            
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+        private void TurnValidationOnForAll()
+        {
+            foreach(Control con in this.Controls)
+            {
+                con.CausesValidation = true;
+            }
+        }
+
+        private void TurnValidationOffForAll()
+        {
+            foreach(Control con in this.Controls)
+            {
+                con.CausesValidation = false;
+            }
+        }
 
         private void AddRepToEmail_Click(object sender, EventArgs e)
         {
@@ -147,49 +180,7 @@ namespace FarmchemCallLog
                 throw;
             }
         }
-        //generates email to be sent to an outside
-        //I want 'btnEmailRep to'(Button3_Click) to pull open a new outlook message for us to look over before actually sending
-        // -'Email to' button 
-        private void EmailRep_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                var fromAddress = new MailAddress("fccalllogtest@gmail.com", "Eric Kobliska");
-                //I would use 'emails.Text' in place of erickobliska@gmail.com here
-                var toAddress = new MailAddress("erickobliska@gmail.com", "Eric K");
-                const string FROMPASSWORD = "thisispassword";
-                string subject = reasonForCall.Text + " call from " + contactName.Text + " at " + companyName.Text;
-                string body = contactName.Text + " called from " + companyName.Text + " in " + companyCity.Text + " " + companyState.Text + ". Their contact info is " + contactPhone.Text + " & " + contactEmail.Text + ". The reason they called: " + notesParagraph.Text + ". This would be e-mailed to " + emails.Text;
 
-
-                var smtp = new SmtpClient
-                {
-                    Host = "smtp.gmail.com",
-                    Port = 587,
-                    EnableSsl = true,
-                    DeliveryMethod = SmtpDeliveryMethod.Network,
-                    UseDefaultCredentials = false,
-                    Credentials = new NetworkCredential(fromAddress.Address, FROMPASSWORD)
-                };
-                using (var message = new MailMessage(fromAddress, toAddress)
-                {
-                    Subject = subject,
-                    Body = body
-                })
-
-                {
-                    smtp.Send(message);
-                    MessageBox.Show("Email sent successfully.");
-                }
-                this.checkBox1.Checked = true;
-                this.checkBox1.Text = "Call record sent to rep(s).";
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
 
         //convertToRga button, opens an RGA form
         private void ConvertToRga_Click(object sender, EventArgs e)
@@ -271,5 +262,114 @@ namespace FarmchemCallLog
             }
         }
 
+
+        //generates email to be sent to an outside
+        //I want 'btnEmailRep to'(Button3_Click) to pull open a new outlook message for us to look over before actually sending
+        // -'Email to' button 
+        private void EmailRep_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var fromAddress = new MailAddress("fccalllogtest@gmail.com", "Eric Kobliska");
+                //I would use 'emails.Text' in place of erickobliska@gmail.com here
+                var toAddress = new MailAddress("erickobliska@gmail.com", "Eric K");
+                const string FROMPASSWORD = "thisispassword";
+                string subject = reasonForCall.Text + " call from " + contactName.Text + " at " + companyName.Text;
+                string body = contactName.Text + " called from " + companyName.Text + " in " + companyCity.Text + " " + companyState.Text + ". Their contact info is " + contactPhone.Text + " & " + contactEmail.Text + ". The reason they called: " + notesParagraph.Text + ". This would be e-mailed to " + emails.Text;
+
+
+                var smtp = new SmtpClient
+                {
+                    Host = "smtp.gmail.com",
+                    Port = 587,
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential(fromAddress.Address, FROMPASSWORD)
+                };
+                using (var message = new MailMessage(fromAddress, toAddress)
+                {
+                    Subject = subject,
+                    Body = body
+                })
+
+                {
+                    smtp.Send(message);
+                    MessageBox.Show("Email sent successfully.");
+                }
+                this.checkBox1.Checked = true;
+                this.checkBox1.Text = "Call record sent to rep(s).";
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+
+        private static bool IsPhoneNumber(string number)
+        {
+            return Regex.Match(number, @"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$").Success;
+        }
+
+        private bool IsValidEmail(string email)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private void CompanyState_Validating(object sender, CancelEventArgs e)
+        {
+            if (companyState.Text.Length > 10)
+            {
+                MessageBox.Show("State is too long");
+                e.Cancel = true;
+            }
+        }
+
+        private void ContactPhone_Validating(object sender, CancelEventArgs e)
+        {
+            if(!IsPhoneNumber(contactPhone.Text))
+            {
+                MessageBox.Show("Please enter a valid phone number");
+                e.Cancel = true;
+            }
+        }
+
+
+        private void ContactName_Validating(object sender, CancelEventArgs e)
+        {
+            if(contactName.Text.Length > 50)
+            {
+                MessageBox.Show("Contact Name is too long");
+                e.Cancel = true;
+            }
+        }
+
+        private void ContactEmail_Validating(object sender, CancelEventArgs e)
+        {
+            if(!IsValidEmail(contactEmail.Text))
+            {
+                DialogResult result = MessageBox.Show("It appears your email may not be formatted correctly, would you like to save anyway?", "Warning!", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    e.Cancel = false;
+
+                }
+                else if (result == DialogResult.No)
+                {
+                    e.Cancel = true;
+                }
+            }
+        }
     }
 }

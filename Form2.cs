@@ -96,24 +96,18 @@ Replace_SO_B.Text, Replace_SO_C.Text, Energy_Price_Level.Text);
         //Loads old RGAs into the form
         private void LoadRgaFormByRecordNumber_Click(object sender, EventArgs e)
         {
-            //checks if the record value is empty
             if (ID.Text == "")
             {
                 MessageBox.Show("Hi guy/gal! Please enter a record number and try again.");
                 return;
             }
-
             PopulateRGAFormFieldsByDataTable(bll.GetDataTableOfRGAByRecordNumber(ID.Text));
             PopulateRGAVersions();
-
-
         }
 
         private void LoadRGAFormByRGANumber_Click(object sender, EventArgs e)
         {
-
             PopulateRGAVersions();
-
             ID.Text = RetrieveRecordNumberFromVersion();
             bll.GetDataTableOfRGAByRecordNumber(ID.Text);
         }
@@ -158,17 +152,8 @@ Replace_SO_B.Text, Replace_SO_C.Text, Energy_Price_Level.Text);
             }
         }
 
-        private string RetrieveRecordNumberFromVersion()
-        {
-            var spaceIndex = rgaVersions.SelectedItem.ToString().IndexOf(" ");
-            return rgaVersions.SelectedItem.ToString().Substring(0, spaceIndex);
-        }
-
-
-
-
-
-
+        private string RetrieveRecordNumberFromVersion() => rgaVersions.SelectedItem.ToString().Substring(0, rgaVersions.SelectedItem.ToString().IndexOf(" "));
+                
         private void PopulateRGAFormFieldsByDataTable(DataTable table)
         {
             CF.Text = table.Rows[0]["CF"].ToString();

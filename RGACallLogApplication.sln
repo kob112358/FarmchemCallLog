@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarmchemCallLog", "Farmchem
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "..\DAL\DAL.csproj", "{B23CEBEC-D887-4B4D-82E1-4A86B35BE3D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLL", "..\BLL\BLL.csproj", "{56EF70EA-1FB5-4C6F-8196-E1EAE5246183}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BLL", "..\BLL\BLL.csproj", "{56EF70EA-1FB5-4C6F-8196-E1EAE5246183}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
