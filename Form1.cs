@@ -7,11 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Data.SqlClient;
 using System.Net;
 using System.Net.Mail;
-using FluentValidation;
-using DAL;
 using BLL;
 using System.Text.RegularExpressions;
 
@@ -20,7 +17,9 @@ namespace FarmchemCallLog
     public partial class Form1 : Form
     {
         public rgaForm rga;
+        public AddAddressForm addAddress;
         BusinessLogicLayer bll = new BusinessLogicLayer();
+
 
 
 
@@ -113,20 +112,17 @@ namespace FarmchemCallLog
         {
             companyName.Text = "";
             companyName.Items.Clear();
-            companyName.Text = bll.GetCompanyName(customerCode.Text);
+            companyName.Items.AddRange(bll.GetCompanyName(customerCode.Text));
+            companyName.Text = companyName.Items[0].ToString();
         }
 
 
         private void SetCityStateZip()
         {
-            companyCity.Items.Clear();
-            companyCity.Text = bll.GetCompanyCity(contactPhone.Text, customerCode.Text);
-
-            companyState.Items.Clear();
-            companyState.Text = bll.GetCompanyState(contactPhone.Text, customerCode.Text);
-
-            companyZip.Items.Clear();
-            companyZip.Text = bll.GetCompanyZip(contactPhone.Text, customerCode.Text);
+            comboCityStateZip.Text = "";
+            comboCityStateZip.Items.Clear();
+            comboCityStateZip.Items.AddRange(bll.GetCompanyCityStateZip(contactPhone.Text, customerCode.Text));
+            comboCityStateZip.Text = comboCityStateZip.Items[0].ToString();
         }
 
         public int SaveFormToDatabase()
@@ -235,11 +231,8 @@ namespace FarmchemCallLog
                 companyName.Text = "";
                 companyName.Items.Clear();
                 companyCity.Text = "";
-                companyCity.Items.Clear();
                 companyState.Text = "";
-                companyState.Items.Clear();
                 companyZip.Text = "";
-                companyZip.Items.Clear();
             }
             catch (Exception)
             {
@@ -343,6 +336,11 @@ namespace FarmchemCallLog
                 MessageBox.Show("Please enter a valid phone number");
                 e.Cancel = true;
             }
+            if(contactPhone.TextLength > 20)
+            {
+                MessageBox.Show("Contact phone is too long - please re-enter.");
+                e.Cancel = true;
+            }
         }
 
 
@@ -357,6 +355,10 @@ namespace FarmchemCallLog
 
         private void ContactEmail_Validating(object sender, CancelEventArgs e)
         {
+            if(contactEmail.Text.Length == 0)
+            {
+                return;
+            }
             if(!IsValidEmail(contactEmail.Text))
             {
                 DialogResult result = MessageBox.Show("It appears your email may not be formatted correctly, would you like to save anyway?", "Warning!", MessageBoxButtons.YesNo);
@@ -370,6 +372,91 @@ namespace FarmchemCallLog
                     e.Cancel = true;
                 }
             }
+            if (contactEmail.Text.Length > 50)
+            {
+                MessageBox.Show("Email is too long - please re-enter.");
+                e.Cancel = true;
+            }
         }
+
+        private void Button2_Click(object sender, EventArgs e)
+        {
+            using(addAddress = new AddAddressForm())
+            {
+                if(addAddress.ShowDialog() == DialogResult.OK)
+                {
+                    companyCity.Text = addAddress.addCompanyCity.Text;
+                    companyState.Text = addAddress.addCompanyState.Text;
+                    companyZip.Text = addAddress.addCompanyZip.Text;
+                }
+            }
+            comboCityStateZip.Items.Add($"{ companyCity.Text}, {companyState.Text}, {companyZip.Text}");
+            comboCityStateZip.SelectedItem = comboCityStateZip.Items[comboCityStateZip.Items.Count - 1];
+        }
+
+        private void CustomerCode_Validating(object sender, CancelEventArgs e)
+        {
+            if (customerCode.Text.Length > 10)
+            {
+                MessageBox.Show("Customer Code is too long - please re-enter.");
+                e.Cancel = true;
+            }
+        }
+
+        private void CompanyCity_Validating(object sender, CancelEventArgs e)
+        {
+            if (companyCity.Text.Length > 50)
+            {
+                MessageBox.Show("Company City is too long - please Add a new address.");
+                e.Cancel = true;
+            }
+        }
+
+        private void CompanyState_Validating_1(object sender, CancelEventArgs e)
+        {
+            if (companyState.Text.Length > 15)
+            {
+                MessageBox.Show("Company State is too long - please Add a new address.");
+                e.Cancel = true;
+            }
+        }
+
+        private void CompanyZip_Validating(object sender, CancelEventArgs e)
+        {
+            if (companyZip.Text.Length > 10)
+            {
+                MessageBox.Show("Company Zip code is too long - please Add a new address.");
+                e.Cancel = true;
+            }
+        }
+
+        private void ReasonForCall_Validating(object sender, CancelEventArgs e)
+        {
+            if (reasonForCall.Text.Length > 50)
+            {
+                MessageBox.Show("Reason for call is too long - please be more succinct.");
+                e.Cancel = true;
+            }
+        }
+
+        private void PartNumber_Validating(object sender, CancelEventArgs e)
+        {
+            if (partNumber.Text.Length > 50)
+            {
+                MessageBox.Show("Part number field is too long - please be more succint.");
+                e.Cancel = true;
+            }
+        }
+
+        private void OriginalSalesOrder_Validating(object sender, CancelEventArgs e)
+        {
+            if (originalSalesOrder.Text.Length > 50)
+            {
+                MessageBox.Show("Sales order field text is too long - please be more succint.");
+                e.Cancel = true;
+            }
+        }
+
+
     }
 }

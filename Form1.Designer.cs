@@ -70,7 +70,6 @@
             this.callDate = new System.Windows.Forms.DateTimePicker();
             this.label3 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.contactPhone = new System.Windows.Forms.TextBox();
@@ -79,11 +78,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.companyName = new System.Windows.Forms.ComboBox();
             this.contactName = new System.Windows.Forms.ComboBox();
-            this.companyCity = new System.Windows.Forms.ComboBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.companyState = new System.Windows.Forms.ComboBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.companyZip = new System.Windows.Forms.ComboBox();
             this.button1 = new System.Windows.Forms.Button();
             this.modifyCallLogDataSet2 = new FarmchemCallLog.ModifyCallLogDataSet2();
             this.modifydataCallLogBindingSource2 = new System.Windows.Forms.BindingSource(this.components);
@@ -98,6 +92,13 @@
             this.notesParagraphDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.completedDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.contactNotes = new System.Windows.Forms.RichTextBox();
+            this.cityStateZip = new System.Windows.Forms.Label();
+            this.comboCityStateZip = new System.Windows.Forms.ComboBox();
+            this.button2 = new System.Windows.Forms.Button();
+            this.companyCity = new System.Windows.Forms.TextBox();
+            this.companyZip = new System.Windows.Forms.TextBox();
+            this.companyState = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.table1BindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.table1BindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.databaseCallLogBindingSource)).BeginInit();
@@ -138,6 +139,7 @@
             this.partNumber.Name = "partNumber";
             this.partNumber.Size = new System.Drawing.Size(155, 20);
             this.partNumber.TabIndex = 10;
+            this.partNumber.Validating += new System.ComponentModel.CancelEventHandler(this.PartNumber_Validating);
             // 
             // label6
             // 
@@ -156,6 +158,7 @@
             this.originalSalesOrder.Name = "originalSalesOrder";
             this.originalSalesOrder.Size = new System.Drawing.Size(155, 20);
             this.originalSalesOrder.TabIndex = 11;
+            this.originalSalesOrder.Validating += new System.ComponentModel.CancelEventHandler(this.OriginalSalesOrder_Validating);
             // 
             // notesParagraph
             // 
@@ -415,6 +418,7 @@
             this.reasonForCall.Name = "reasonForCall";
             this.reasonForCall.Size = new System.Drawing.Size(155, 21);
             this.reasonForCall.TabIndex = 9;
+            this.reasonForCall.Validating += new System.ComponentModel.CancelEventHandler(this.ReasonForCall_Validating);
             // 
             // completedAnswer
             // 
@@ -454,15 +458,6 @@
             this.label7.Size = new System.Drawing.Size(75, 13);
             this.label7.TabIndex = 11;
             this.label7.Text = "Contact E-mail";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(19, 113);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(71, 13);
-            this.label4.TabIndex = 7;
-            this.label4.Text = "Company City";
             // 
             // label8
             // 
@@ -512,6 +507,7 @@
             this.customerCode.Name = "customerCode";
             this.customerCode.Size = new System.Drawing.Size(155, 21);
             this.customerCode.TabIndex = 4;
+            this.customerCode.Validating += new System.ComponentModel.CancelEventHandler(this.CustomerCode_Validating);
             // 
             // label1
             // 
@@ -541,52 +537,6 @@
             this.contactName.TabIndex = 2;
             this.contactName.Leave += new System.EventHandler(this.ContactName_Leave);
             this.contactName.Validating += new System.ComponentModel.CancelEventHandler(this.ContactName_Validating);
-            // 
-            // companyCity
-            // 
-            this.companyCity.CausesValidation = false;
-            this.companyCity.FormattingEnabled = true;
-            this.companyCity.Location = new System.Drawing.Point(18, 129);
-            this.companyCity.Name = "companyCity";
-            this.companyCity.Size = new System.Drawing.Size(155, 21);
-            this.companyCity.TabIndex = 6;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(179, 113);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(79, 13);
-            this.label11.TabIndex = 13;
-            this.label11.Text = "Company State";
-            // 
-            // companyState
-            // 
-            this.companyState.CausesValidation = false;
-            this.companyState.FormattingEnabled = true;
-            this.companyState.Location = new System.Drawing.Point(179, 129);
-            this.companyState.Name = "companyState";
-            this.companyState.Size = new System.Drawing.Size(155, 21);
-            this.companyState.TabIndex = 7;
-            this.companyState.Validating += new System.ComponentModel.CancelEventHandler(this.CompanyState_Validating);
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(345, 113);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(69, 13);
-            this.label12.TabIndex = 15;
-            this.label12.Text = "Company Zip";
-            // 
-            // companyZip
-            // 
-            this.companyZip.CausesValidation = false;
-            this.companyZip.FormattingEnabled = true;
-            this.companyZip.Location = new System.Drawing.Point(340, 129);
-            this.companyZip.Name = "companyZip";
-            this.companyZip.Size = new System.Drawing.Size(155, 21);
-            this.companyZip.TabIndex = 8;
             // 
             // button1
             // 
@@ -705,22 +655,84 @@
             this.contactNotes.TabIndex = 37;
             this.contactNotes.Text = "";
             // 
+            // cityStateZip
+            // 
+            this.cityStateZip.AutoSize = true;
+            this.cityStateZip.Location = new System.Drawing.Point(19, 113);
+            this.cityStateZip.Name = "cityStateZip";
+            this.cityStateZip.Size = new System.Drawing.Size(123, 13);
+            this.cityStateZip.TabIndex = 39;
+            this.cityStateZip.Text = "Company City, State, Zip";
+            // 
+            // comboCityStateZip
+            // 
+            this.comboCityStateZip.FormattingEnabled = true;
+            this.comboCityStateZip.Location = new System.Drawing.Point(19, 129);
+            this.comboCityStateZip.Name = "comboCityStateZip";
+            this.comboCityStateZip.Size = new System.Drawing.Size(316, 21);
+            this.comboCityStateZip.TabIndex = 40;
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(340, 113);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(155, 37);
+            this.button2.TabIndex = 41;
+            this.button2.Text = "Add New Address";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.Button2_Click);
+            // 
+            // companyCity
+            // 
+            this.companyCity.Location = new System.Drawing.Point(808, 597);
+            this.companyCity.Name = "companyCity";
+            this.companyCity.Size = new System.Drawing.Size(0, 20);
+            this.companyCity.TabIndex = 42;
+            this.companyCity.Validating += new System.ComponentModel.CancelEventHandler(this.CompanyCity_Validating);
+            // 
+            // companyZip
+            // 
+            this.companyZip.Location = new System.Drawing.Point(1020, 597);
+            this.companyZip.Name = "companyZip";
+            this.companyZip.Size = new System.Drawing.Size(0, 20);
+            this.companyZip.TabIndex = 43;
+            this.companyZip.Validating += new System.ComponentModel.CancelEventHandler(this.CompanyZip_Validating);
+            // 
+            // companyState
+            // 
+            this.companyState.Location = new System.Drawing.Point(914, 597);
+            this.companyState.Name = "companyState";
+            this.companyState.Size = new System.Drawing.Size(0, 20);
+            this.companyState.TabIndex = 44;
+            this.companyState.Validating += new System.ComponentModel.CancelEventHandler(this.CompanyState_Validating_1);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(717, 603);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(73, 13);
+            this.label4.TabIndex = 45;
+            this.label4.Text = "CityStateZip->";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1169, 620);
+            this.ClientSize = new System.Drawing.Size(1169, 629);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.companyState);
+            this.Controls.Add(this.companyZip);
+            this.Controls.Add(this.companyCity);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.comboCityStateZip);
+            this.Controls.Add(this.cityStateZip);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.contactNotes);
-            this.Controls.Add(this.companyZip);
             this.Controls.Add(this.callDate);
-            this.Controls.Add(this.label12);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.companyState);
             this.Controls.Add(this.completedAnswer);
-            this.Controls.Add(this.label11);
             this.Controls.Add(this.reasonForCall);
-            this.Controls.Add(this.companyCity);
             this.Controls.Add(this.btnNewCall);
             this.Controls.Add(this.contactName);
             this.Controls.Add(this.companyName);
@@ -736,7 +748,6 @@
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.bindingNavigator1);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this.btnEmailRep);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.btnConvertToRGA);
@@ -807,12 +818,9 @@
         private System.Windows.Forms.CheckBox completedAnswer;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Button button1;
         private ModifyCallLogDataSet2 modifyCallLogDataSet2;
         private System.Windows.Forms.BindingSource modifydataCallLogBindingSource2;
@@ -833,12 +841,16 @@
         public System.Windows.Forms.ComboBox customerCode;
         public System.Windows.Forms.ComboBox companyName;
         public System.Windows.Forms.ComboBox contactName;
-        public System.Windows.Forms.ComboBox companyCity;
-        public System.Windows.Forms.ComboBox companyState;
-        public System.Windows.Forms.ComboBox companyZip;
         public System.Windows.Forms.DataGridView dataGridView1;
         public System.Windows.Forms.RichTextBox contactNotes;
         public System.Windows.Forms.DateTimePicker callDate;
+        private System.Windows.Forms.Label cityStateZip;
+        private System.Windows.Forms.ComboBox comboCityStateZip;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.TextBox companyCity;
+        private System.Windows.Forms.TextBox companyZip;
+        private System.Windows.Forms.TextBox companyState;
+        private System.Windows.Forms.Label label4;
     }
 }
 
