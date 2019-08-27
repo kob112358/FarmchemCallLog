@@ -99,6 +99,9 @@
             this.companyZip = new System.Windows.Forms.TextBox();
             this.companyState = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.customerNotes = new System.Windows.Forms.TabControl();
+            this.businessNotes = new System.Windows.Forms.TabPage();
             ((System.ComponentModel.ISupportInitialize)(this.table1BindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.table1BindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.databaseCallLogBindingSource)).BeginInit();
@@ -112,6 +115,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.modifyCallLogDataSet2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.modifydataCallLogBindingSource2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.customerNotes.SuspendLayout();
             this.SuspendLayout();
             // 
             // table1BindingSource
@@ -649,9 +653,9 @@
             // contactNotes
             // 
             this.contactNotes.CausesValidation = false;
-            this.contactNotes.Location = new System.Drawing.Point(708, 10);
+            this.contactNotes.Location = new System.Drawing.Point(708, 225);
             this.contactNotes.Name = "contactNotes";
-            this.contactNotes.Size = new System.Drawing.Size(375, 324);
+            this.contactNotes.Size = new System.Drawing.Size(375, 104);
             this.contactNotes.TabIndex = 37;
             this.contactNotes.Text = "";
             // 
@@ -666,11 +670,13 @@
             // 
             // comboCityStateZip
             // 
+            this.comboCityStateZip.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboCityStateZip.FormattingEnabled = true;
             this.comboCityStateZip.Location = new System.Drawing.Point(19, 129);
             this.comboCityStateZip.Name = "comboCityStateZip";
             this.comboCityStateZip.Size = new System.Drawing.Size(316, 21);
             this.comboCityStateZip.TabIndex = 40;
+            this.comboCityStateZip.SelectedIndexChanged += new System.EventHandler(this.ComboCityStateZip_SelectedIndexChanged);
             // 
             // button2
             // 
@@ -684,9 +690,9 @@
             // 
             // companyCity
             // 
-            this.companyCity.Location = new System.Drawing.Point(808, 597);
+            this.companyCity.Location = new System.Drawing.Point(796, 596);
             this.companyCity.Name = "companyCity";
-            this.companyCity.Size = new System.Drawing.Size(0, 20);
+            this.companyCity.Size = new System.Drawing.Size(97, 20);
             this.companyCity.TabIndex = 42;
             this.companyCity.Validating += new System.ComponentModel.CancelEventHandler(this.CompanyCity_Validating);
             // 
@@ -694,7 +700,7 @@
             // 
             this.companyZip.Location = new System.Drawing.Point(1020, 597);
             this.companyZip.Name = "companyZip";
-            this.companyZip.Size = new System.Drawing.Size(0, 20);
+            this.companyZip.Size = new System.Drawing.Size(63, 20);
             this.companyZip.TabIndex = 43;
             this.companyZip.Validating += new System.ComponentModel.CancelEventHandler(this.CompanyZip_Validating);
             // 
@@ -702,7 +708,7 @@
             // 
             this.companyState.Location = new System.Drawing.Point(914, 597);
             this.companyState.Name = "companyState";
-            this.companyState.Size = new System.Drawing.Size(0, 20);
+            this.companyState.Size = new System.Drawing.Size(100, 20);
             this.companyState.TabIndex = 44;
             this.companyState.Validating += new System.ComponentModel.CancelEventHandler(this.CompanyState_Validating_1);
             // 
@@ -715,11 +721,42 @@
             this.label4.TabIndex = 45;
             this.label4.Text = "CityStateZip->";
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(708, 205);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(55, 13);
+            this.label11.TabIndex = 46;
+            this.label11.Text = "Call Notes";
+            // 
+            // customerNotes
+            // 
+            this.customerNotes.Controls.Add(this.businessNotes);
+            this.customerNotes.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.customerNotes.Location = new System.Drawing.Point(708, 10);
+            this.customerNotes.Name = "customerNotes";
+            this.customerNotes.SelectedIndex = 0;
+            this.customerNotes.Size = new System.Drawing.Size(375, 192);
+            this.customerNotes.TabIndex = 47;
+            // 
+            // businessNotes
+            // 
+            this.businessNotes.Location = new System.Drawing.Point(4, 22);
+            this.businessNotes.Name = "businessNotes";
+            this.businessNotes.Padding = new System.Windows.Forms.Padding(3);
+            this.businessNotes.Size = new System.Drawing.Size(367, 166);
+            this.businessNotes.TabIndex = 0;
+            this.businessNotes.Text = "Business Notes";
+            this.businessNotes.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1169, 629);
+            this.Controls.Add(this.customerNotes);
+            this.Controls.Add(this.label11);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.companyState);
             this.Controls.Add(this.companyZip);
@@ -776,6 +813,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.modifyCallLogDataSet2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.modifydataCallLogBindingSource2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            this.customerNotes.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -851,6 +889,9 @@
         private System.Windows.Forms.TextBox companyZip;
         private System.Windows.Forms.TextBox companyState;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TabControl customerNotes;
+        public System.Windows.Forms.TabPage businessNotes;
     }
 }
 

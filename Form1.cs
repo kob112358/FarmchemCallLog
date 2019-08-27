@@ -88,8 +88,22 @@ namespace FarmchemCallLog
         {
             contactName.Text = "";
             contactName.Items.Clear();
-            contactName.Items.AddRange(bll.GetNameList(contactPhone.Text));
+            var list = bll.GetNameList(contactPhone.Text);
+            contactName.Items.AddRange(list);
             contactName.Text = contactName.Items[0].ToString();
+            SetCustomerNotes(list);
+        }
+
+        public void SetCustomerNotes(string[] list)
+        {
+            while(customerNotes.TabPages.Count > 1)
+            { 
+                customerNotes.TabPages.RemoveAt(1);
+            }
+            foreach(var p in list)
+            {
+                customerNotes.TabPages.Add(p.ToString());
+            }
         }
 
         private void SetContactEmail()
@@ -241,19 +255,6 @@ namespace FarmchemCallLog
             }
         }
 
-        //populates the notes from a previous call for a bigger viewing area
-        private void PopulateNotesFromCall_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                contactNotes.Visible = true;
-                contactNotes.Text = dataGridView1.CurrentRow.Cells[6].Value.ToString();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
 
 
         //generates email to be sent to an outside
@@ -385,9 +386,9 @@ namespace FarmchemCallLog
             {
                 if(addAddress.ShowDialog() == DialogResult.OK)
                 {
-                    companyCity.Text = addAddress.addCompanyCity.Text;
-                    companyState.Text = addAddress.addCompanyState.Text;
-                    companyZip.Text = addAddress.addCompanyZip.Text;
+                    companyCity.Text = addAddress.addCompanyCity.Text.Replace(",","");
+                    companyState.Text = addAddress.addCompanyState.Text.Replace(",", "");
+                    companyZip.Text = addAddress.addCompanyZip.Text.Replace(",", "");
                 }
             }
             comboCityStateZip.Items.Add($"{ companyCity.Text}, {companyState.Text}, {companyZip.Text}");
@@ -458,5 +459,35 @@ namespace FarmchemCallLog
         }
 
 
+
+
+
+
+        //populates the notes from a previous call for a bigger viewing area
+        private void PopulateNotesFromCall_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                contactNotes.Visible = true;
+                contactNotes.Text = dataGridView1.CurrentRow.Cells[6].Value.ToString();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        //this is based on combocitystatezip being saved in the database with ', ' between each value
+        //all commas removed from add address
+        private void ComboCityStateZip_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            companyCity.Text = "";
+            companyState.Text = "";
+            companyZip.Text = "";
+            string[] line = comboCityStateZip.Text.Split(',');
+            companyCity.Text = line[0];
+            companyState.Text = line[1];
+            companyZip.Text = line[2];                
+        }
     }
 }

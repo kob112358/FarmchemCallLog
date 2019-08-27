@@ -12,8 +12,6 @@ namespace FarmchemCallLog
     public partial class rgaForm : Form
     {
 
-        private SqlConnection _con = new SqlConnection("data source=kobpc\\sqlexpress;initial catalog=modifycalllog;integrated security=true");
-        private DataTable _dt;
         BusinessLogicLayer bll = new BusinessLogicLayer();
 
 
@@ -81,10 +79,6 @@ Replace_SO_B.Text, Replace_SO_C.Text, Energy_Price_Level.Text);
             {
 
                 throw;
-            }
-            finally
-            {
-                _con.Close();
             }
         }
 
