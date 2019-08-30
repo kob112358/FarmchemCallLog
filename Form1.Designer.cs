@@ -539,6 +539,7 @@
             this.contactName.Name = "contactName";
             this.contactName.Size = new System.Drawing.Size(155, 21);
             this.contactName.TabIndex = 2;
+            this.contactName.SelectedValueChanged += new System.EventHandler(this.ContactName_SelectedValueChanged);
             this.contactName.Leave += new System.EventHandler(this.ContactName_Leave);
             this.contactName.Validating += new System.ComponentModel.CancelEventHandler(this.ContactName_Validating);
             // 

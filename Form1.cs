@@ -39,6 +39,7 @@ namespace FarmchemCallLog
             }
             ClearCallerData();
             SetContactName();
+            
             if (contactName.Items.Count > 0)
             {
                 SetContactEmail();
@@ -82,7 +83,12 @@ namespace FarmchemCallLog
             PopulateDataGridViewByPhoneCompanyCity();
         }
 
-
+        public void CreateBusinessNotes()
+        {
+            var textbox = new RichTextBox() { Height = 166, Width = 366 };
+            textbox.Text = bll.GetBusinessNotes(contactPhone.Text, customerCode.Text);
+            customerNotes.TabPages[0].Controls.Add(textbox);
+        }
 
         private void SetContactName()
         {
@@ -91,20 +97,31 @@ namespace FarmchemCallLog
             var list = bll.GetNameList(contactPhone.Text);
             contactName.Items.AddRange(list);
             contactName.Text = contactName.Items[0].ToString();
-            SetCustomerNotes(list);
+            CreateContactsAndNotesTabs(list);
         }
 
-        public void SetCustomerNotes(string[] list)
+
+        public void CreateContactsAndNotesTabs(string[] list)
         {
-            while(customerNotes.TabPages.Count > 1)
-            { 
+            while (customerNotes.TabPages.Count > 1)
+            {
                 customerNotes.TabPages.RemoveAt(1);
             }
-            foreach(var p in list)
+            if (list.Length > 0)
             {
-                customerNotes.TabPages.Add(p.ToString());
+                foreach (var p in list)
+                {
+                    var textbox = new RichTextBox() { Height = 166, Width = 366 };
+                    textbox.Text = bll.GetNameNotes(contactPhone.Text, p.ToString());
+                    var newTab = new TabPage(p.ToString());
+                    customerNotes.TabPages.Add(newTab);
+                    newTab.Name = p.ToString();
+                    newTab.Controls.Add(textbox);
+                }
+                SelectTabBasedOnSelectedContact();
             }
         }
+
 
         private void SetContactEmail()
         {
@@ -120,6 +137,7 @@ namespace FarmchemCallLog
             customerCode.Items.Clear();
             customerCode.Items.AddRange(bll.GetCustomerCode(contactPhone.Text, contactName.Text));
             customerCode.Text = customerCode.Items[0].ToString();
+            CreateBusinessNotes();
         }
 
         private void SetCompanyName()
@@ -141,11 +159,28 @@ namespace FarmchemCallLog
 
         public int SaveFormToDatabase()
         {
+            string contactNotes;
+            //string companyNotes = "";
+            //if(!(customerNotes.TabPages["Business Notes"].Controls[0].Text.ToString() == null))
+            //{
+            //    companyNotes = customerNotes.TabPages[businessNotes.Text].Controls[0].Text.ToString();
+            //}
+           
+            //MessageBox.Show(companyNotes);
+            //companyNotes = customerNotes.TabPages["Business Notes"].Controls[0].Text;
+            if (customerNotes.TabPages.Count > 1)
+            {
+                contactNotes = customerNotes.TabPages[contactName.Text].Controls[0].Text;
+            }
+            else
+            {
+                contactNotes = "";
+            }
             TurnValidationOnForAll();
             if (this.ValidateChildren())
             {
                 TurnValidationOffForAll();
-                return bll.SaveToDatabase(contactPhone.Text, contactName.Text, contactEmail.Text, customerCode.Text, companyName.Text, companyCity.Text, companyState.Text, companyZip.Text, originalSalesOrder.Text, partNumber.Text, reasonForCall.Text, notesParagraph.Text, callDate.Text);
+                return bll.SaveToDatabase(contactPhone.Text, contactName.Text, contactEmail.Text, customerCode.Text, companyName.Text, companyCity.Text, companyState.Text, companyZip.Text, originalSalesOrder.Text, partNumber.Text, reasonForCall.Text, notesParagraph.Text, callDate.Text, contactNotes);
                 
             }
             else
@@ -250,8 +285,7 @@ namespace FarmchemCallLog
             }
             catch (Exception)
             {
-
-                throw;
+                MessageBox.Show("Hi guy/gal, there was an issue trying to ClearCallerData(). Please snip the screen and send to IT/Eric.");
             }
         }
 
@@ -321,14 +355,7 @@ namespace FarmchemCallLog
             }
         }
 
-        private void CompanyState_Validating(object sender, CancelEventArgs e)
-        {
-            if (companyState.Text.Length > 10)
-            {
-                MessageBox.Show("State is too long");
-                e.Cancel = true;
-            }
-        }
+
 
         private void ContactPhone_Validating(object sender, CancelEventArgs e)
         {
@@ -422,6 +449,15 @@ namespace FarmchemCallLog
             }
         }
 
+        private void CompanyState_Validating(object sender, CancelEventArgs e)
+        {
+            if (companyState.Text.Length > 10)
+            {
+                MessageBox.Show("State is too long");
+                e.Cancel = true;
+            }
+        }
+
         private void CompanyZip_Validating(object sender, CancelEventArgs e)
         {
             if (companyZip.Text.Length > 10)
@@ -485,9 +521,46 @@ namespace FarmchemCallLog
             companyState.Text = "";
             companyZip.Text = "";
             string[] line = comboCityStateZip.Text.Split(',');
-            companyCity.Text = line[0];
-            companyState.Text = line[1];
-            companyZip.Text = line[2];                
+            companyCity.Text = line[0].Trim();
+            companyState.Text = line[1].Trim();
+            companyZip.Text = line[2].Trim();                
         }
+
+        private void ContactName_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if (contactName.Text == null || customerNotes.TabCount < 2)
+            {
+                return;
+            }
+            else
+            {
+                try
+                {
+                    SelectTabBasedOnSelectedContact();
+                }
+                catch
+                {
+                }
+            }
+        }
+
+        private void SelectTabBasedOnSelectedContact()
+        {
+            if (contactName.Text == null || customerNotes.TabCount < 2)
+            {
+                return;
+            }
+            else
+            {
+                try
+                {
+                    customerNotes.SelectTab(contactName.Text);
+                }
+                catch
+                {
+                }
+            }
+        }
+
     }
 }
