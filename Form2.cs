@@ -201,8 +201,8 @@ Replace_SO_B.Text, Replace_SO_C.Text, Energy_Price_Level.Text);
             var fromAddress = new MailAddress("fccalllogtest@gmail.com", "Eric Kobliska");
             var toAddress = new MailAddress("erickobliska@gmail.com", "Eric K");
             const string fromPassword = "thisispassword";
-            string subject = CF.Text + " Email";
-            string body = Contact_Email.Text + " is the email for " + CF.Text + ". It has + " + rgaTotalBox.Text + " number of boxes weighing " + rgaTotalWeight.Text + ".";
+            string subject = $"{CF.Text} Email";
+            string body = $"{Contact_Email.Text} is the email for {CF.Text}. It has {rgaTotalBox.Text} number of boxes weighing {rgaTotalWeight.Text}.";
 
             try
             {
@@ -282,6 +282,43 @@ Replace_SO_B.Text, Replace_SO_C.Text, Energy_Price_Level.Text);
             }
         }
 
+        private void Button4_Click(object sender, EventArgs e)
+        {
+            var fromAddress = new MailAddress("fccalllogtest@gmail.com", "Eric Kobliska");
+            var toAddress = new MailAddress("erickobliska@gmail.com", "Eric K");
+            const string fromPassword = "thisispassword";
+            string subject = $"RGA {CF.Text} for {Contact_Name} at {CUSTOMER.Text}";
+            string body = $"{Contact_Name} at {CUSTOMER.Text} called in an RGA. Their email is {Contact_Email.Text} and their phone # is {Contact_Phone.Text}.";
 
+            try
+            {
+                var smtp = new SmtpClient
+                {
+                    Host = "smtp.gmail.com",
+                    Port = 587,
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+                };
+                using (var message = new MailMessage(fromAddress, toAddress)
+                {
+                    Subject = subject,
+                    Body = body
+                })
+                {
+                    smtp.Send(message);
+                    MessageBox.Show("Email sent to shipping successfully.");
+                }
+
+                this.checkBox2.Checked = true;
+                this.checkBox2.Text = Contact_Email.Text + " sent to shipping.";
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

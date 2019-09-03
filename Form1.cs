@@ -160,14 +160,11 @@ namespace FarmchemCallLog
         public int SaveFormToDatabase()
         {
             string contactNotes;
-            //string companyNotes = "";
-            //if(!(customerNotes.TabPages["Business Notes"].Controls[0].Text.ToString() == null))
-            //{
-            //    companyNotes = customerNotes.TabPages[businessNotes.Text].Controls[0].Text.ToString();
-            //}
-           
-            //MessageBox.Show(companyNotes);
-            //companyNotes = customerNotes.TabPages["Business Notes"].Controls[0].Text;
+            string companyNotes = "";
+            if(!(customerNotes.TabPages[0].Controls[0].Text == ""))
+            {
+                companyNotes = customerNotes.TabPages[0].Controls[0].Text;
+            }
             if (customerNotes.TabPages.Count > 1)
             {
                 contactNotes = customerNotes.TabPages[contactName.Text].Controls[0].Text;
@@ -180,7 +177,7 @@ namespace FarmchemCallLog
             if (this.ValidateChildren())
             {
                 TurnValidationOffForAll();
-                return bll.SaveToDatabase(contactPhone.Text, contactName.Text, contactEmail.Text, customerCode.Text, companyName.Text, companyCity.Text, companyState.Text, companyZip.Text, originalSalesOrder.Text, partNumber.Text, reasonForCall.Text, notesParagraph.Text, callDate.Text, contactNotes);
+                return bll.SaveToDatabase(contactPhone.Text, contactName.Text, contactEmail.Text, customerCode.Text, companyName.Text, companyCity.Text, companyState.Text, companyZip.Text, originalSalesOrder.Text, partNumber.Text, reasonForCall.Text, notesParagraph.Text, callDate.Text, contactNotes, companyNotes);
                 
             }
             else
@@ -302,8 +299,8 @@ namespace FarmchemCallLog
                 //I would use 'emails.Text' in place of erickobliska@gmail.com here
                 var toAddress = new MailAddress("erickobliska@gmail.com", "Eric K");
                 const string FROMPASSWORD = "thisispassword";
-                string subject = reasonForCall.Text + " call from " + contactName.Text + " at " + companyName.Text;
-                string body = contactName.Text + " called from " + companyName.Text + " in " + companyCity.Text + " " + companyState.Text + ". Their contact info is " + contactPhone.Text + " & " + contactEmail.Text + ". The reason they called: " + notesParagraph.Text + ". This would be e-mailed to " + emails.Text;
+                string subject = $"{reasonForCall.Text} call from {contactName.Text} at {companyName.Text}";
+                string body = $"{contactName.Text} called from {companyName.Text} in {comboCityStateZip.Text}. Their contact info is {contactPhone.Text} & {contactEmail.Text}. The reason they called: {notesParagraph.Text}.";
 
 
                 var smtp = new SmtpClient
