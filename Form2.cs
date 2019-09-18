@@ -64,7 +64,7 @@ SALES_ORDER.Text, CUSTOMER.Text, Notes_and_Activity.Text, Final_Outcome.Text, Te
 Contact_Email.Text, Return_Qty_A.Text, Return_Item_A.Text, Return_Qty_B.Text, Return_Item_B.Text,
 Return_Qty_C.Text, Return_Item_C.Text, Return_Qty_D.Text, Return_Item_D.Text, Return_Credit_A.Text, Return_Credit_B.Text, Return_Credit_C.Text, Return_Credit_D.Text,
 Return_Ship_Method.Text, Replace_Qty_A.Text, Replace_Qty_B.Text, Replace_Qty_C.Text, Replace_Item_A.Text, Replace_Item_B.Text, Replace_Item_C.Text, Replace_SO_A.Text,
-Replace_SO_B.Text, Replace_SO_C.Text, Energy_Price_Level.Text);
+Replace_SO_B.Text, Replace_SO_C.Text, Energy_Price_Level.Text, Outside_Rep.Text);
                 if (newRecord != 0)
                 {
                     MessageBox.Show($"{CF.Text}, Record '{newRecord}' has been saved.");
@@ -191,7 +191,7 @@ Replace_SO_B.Text, Replace_SO_C.Text, Energy_Price_Level.Text);
             Replace_SO_B.Text = table.Rows[0]["Replace_SO_B"].ToString();
             Replace_SO_C.Text = table.Rows[0]["Replace_SO_C"].ToString();
             Energy_Price_Level.Text = table.Rows[0]["Energy_Price_Level"].ToString();
-
+            Outside_Rep.Text = table.Rows[0]["Outside_Rep"].ToString();
         }
 
         //this generates an e-mail that is sent to shipping telling them what the e-mail address is to send the return shipping label

@@ -37,3 +37,4 @@ C:\Users\Kob\source\repos\FarmchemCallLog\bin\Debug\System.Data.SqlClient.dll
 C:\Users\Kob\source\repos\FarmchemCallLog\bin\Debug\BLL.pdb
 C:\Users\Kob\source\repos\FarmchemCallLog\bin\Debug\DAL.pdb
 C:\Users\Kob\source\repos\FarmchemCallLog\obj\Debug\FarmchemCallLog.AddAddressForm.resources
+C:\Users\Kob\source\repos\FarmchemCallLog\obj\Debug\FarmchemCallLog.SearchForm.resources

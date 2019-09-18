@@ -18,6 +18,7 @@ namespace FarmchemCallLog
     {
         public rgaForm rga;
         public AddAddressForm addAddress;
+        public SearchForm searchForm;
         BusinessLogicLayer bll = new BusinessLogicLayer();
 
 
@@ -28,57 +29,110 @@ namespace FarmchemCallLog
             InitializeComponent();
             contactPhone.Select();
         }
-        
 
-        //populates contactNameField and updates displayed info to calls from phone
-        private void ContactPhone_Leave(object sender, EventArgs e)
+
+        private void ContactPhone_LostFocus(object sender, EventArgs e)
         {
-            if (!IsPhoneNumber(contactPhone.Text))
+            if(String.IsNullOrEmpty(contactPhone.Text))
             {
                 return;
             }
-            ClearCallerData();
-            SetContactName();
-            
-            if (contactName.Items.Count > 0)
+            if(String.IsNullOrEmpty(contactName.Text) && String.IsNullOrEmpty(contactEmail.Text) && String.IsNullOrEmpty(customerCode.Text) && String.IsNullOrEmpty(companyName.Text)
+                && String.IsNullOrEmpty(comboCityStateZip.Text) && String.IsNullOrEmpty(reasonForCall.Text) && String.IsNullOrEmpty(repEmail.Text) && String.IsNullOrEmpty(notesParagraph.Text))
             {
-                SetContactEmail();
-                SetCustomerCode();
-                SetCompanyName();
-                SetCityStateZip();
-                PopulateDataGridViewByPhoneCompanyCity();
-            }
+                ClearCallerData();
+                ClearContactTabsAndNotes();
+                SetContactName();
 
+                if (contactName.Items.Count > 0)
+                {
+                    SetContactEmail();
+                    SetCustomerCode();
+                    SetCompanyName();
+                    SetCityStateZip();
+                    PopulateDataGridViewByPhoneCompanyCity();
+                }
+                SelectTabBasedOnSelectedContact();
+            }
+            else
+            {
+                DialogResult result = MessageBox.Show("Do you want to delete the info currently in form?", "Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                if (result == DialogResult.Yes)
+                {
+                    ClearCallerData();
+                    ClearContactTabsAndNotes();
+                    SetContactName();
+
+                    if (contactName.Items.Count > 0)
+                    {
+                        SetContactEmail();
+                        SetCustomerCode();
+                        SetCompanyName();
+                        SetCityStateZip();
+                        PopulateDataGridViewByPhoneCompanyCity();
+                    }
+                    SelectTabBasedOnSelectedContact();
+                }
+                else if (result == DialogResult.No)
+                {
+                    return;
+                }
+            }
         }
-        private void ContactName_Leave(object sender, EventArgs e)
+
+        private void ContactName_LostFocus(object sender, EventArgs e)
         {
             try
             {
+                if (contactTabControl.TabPages.ContainsKey(contactName.Text) == false && contactName.Text != "")
+                {
+                    var textbox = new RichTextBox() { Height = 166, Width = 366 };
+                    textbox.Text = "";
+                    var newTab = new TabPage(contactName.Text);
+                    contactTabControl.TabPages.Add(newTab);
+                    newTab.Name = contactName.Text;
+                    newTab.Controls.Add(textbox);
+                }
                 SetContactEmail();
                 SetCompanyName();
                 SetCityStateZip();
+
+
             }
             catch
             {
                 MessageBox.Show("Error populating data with contact name.");
             }
-                
+            SelectTabBasedOnSelectedContact();
         }
 
         public void PopulateDataGridViewByPhoneCompanyCity()
         {
-            dataGridView1.DataSource = bll.GetGridViewData(contactPhone.Text, companyName.Text, companyCity.Text);
+            callLogGridView.DataSource = bll.GetGridViewData(contactPhone.Text, companyName.Text, companyCity.Text);
         }
 
         private void BtnSave_Click(object sender, EventArgs e)
         {
             if (SaveFormToDatabase() != 0)
             {
-                MessageBox.Show("Saved");
+                MessageBox.Show("Saved call");
             }
             else
             {
-                MessageBox.Show("Did not save form");
+                MessageBox.Show("Did not save call");
+            }
+            PopulateDataGridViewByPhoneCompanyCity();
+        }
+
+        private void BtnUpdate_Click(object sender, EventArgs e)
+        {
+            if (UpdateFormInDatabase() != 0)
+            {
+                MessageBox.Show("Record Updated");
+            }
+            else
+            {
+                MessageBox.Show("Did not update form");
             }
             PopulateDataGridViewByPhoneCompanyCity();
         }
@@ -87,7 +141,7 @@ namespace FarmchemCallLog
         {
             var textbox = new RichTextBox() { Height = 166, Width = 366 };
             textbox.Text = bll.GetBusinessNotes(contactPhone.Text, customerCode.Text);
-            customerNotes.TabPages[0].Controls.Add(textbox);
+            businessTabControl.TabPages[0].Controls.Add(textbox);
         }
 
         private void SetContactName()
@@ -95,18 +149,24 @@ namespace FarmchemCallLog
             contactName.Text = "";
             contactName.Items.Clear();
             var list = bll.GetNameList(contactPhone.Text);
-            contactName.Items.AddRange(list);
-            contactName.Text = contactName.Items[0].ToString();
-            CreateContactsAndNotesTabs(list);
+            if (list.Length == 1 && list[0] == "" || list.Length == 0)
+            {
+
+            }
+            else
+            {
+                contactName.Items.AddRange(list);
+                contactName.Text = contactName.Items[0].ToString();
+                CreateContactsAndNotesTabs(list);
+            }
+
         }
 
 
         public void CreateContactsAndNotesTabs(string[] list)
         {
-            while (customerNotes.TabPages.Count > 1)
-            {
-                customerNotes.TabPages.RemoveAt(1);
-            }
+            ClearContactTabsAndNotes();
+
             if (list.Length > 0)
             {
                 foreach (var p in list)
@@ -114,14 +174,37 @@ namespace FarmchemCallLog
                     var textbox = new RichTextBox() { Height = 166, Width = 366 };
                     textbox.Text = bll.GetNameNotes(contactPhone.Text, p.ToString());
                     var newTab = new TabPage(p.ToString());
-                    customerNotes.TabPages.Add(newTab);
+                    contactTabControl.TabPages.Add(newTab);
                     newTab.Name = p.ToString();
                     newTab.Controls.Add(textbox);
                 }
-                SelectTabBasedOnSelectedContact();
             }
+            SelectTabBasedOnSelectedContact();
+            contactName.Select();
         }
 
+        public void ClearContactTabsAndNotes()
+        {
+            //contactTabControl.TabPages.Clear();
+            //clear the controls from each tab page
+            for (int i = 0; i < contactTabControl.TabPages.Count; i++)
+            {
+                if (contactTabControl.TabPages[i].Controls.Count > 0)
+                {
+                    contactTabControl.TabPages[0].Controls.Clear();
+                }
+            }
+            while (contactTabControl.TabCount > 1)
+            {
+                contactTabControl.TabPages.RemoveAt(1);
+            }
+
+        }
+
+        private void ClearCompanyNotesText()
+        {
+            businessTabControl.TabPages[0].Controls.Clear();
+        }
 
         private void SetContactEmail()
         {
@@ -161,13 +244,17 @@ namespace FarmchemCallLog
         {
             string contactNotes;
             string companyNotes = "";
-            if(!(customerNotes.TabPages[0].Controls[0].Text == ""))
+            if (businessTabControl.TabPages[0].Controls[0].Text != "")
             {
-                companyNotes = customerNotes.TabPages[0].Controls[0].Text;
+                companyNotes = businessTabControl.TabPages[0].Controls[0].Text;
             }
-            if (customerNotes.TabPages.Count > 1)
+            if (contactTabControl.TabPages.Count > 1)
             {
-                contactNotes = customerNotes.TabPages[contactName.Text].Controls[0].Text;
+                try
+                {
+                    contactNotes = contactTabControl.TabPages[contactName.Text].Controls[0].Text;
+                }
+                catch { contactNotes = ""; }
             }
             else
             {
@@ -177,22 +264,47 @@ namespace FarmchemCallLog
             if (this.ValidateChildren())
             {
                 TurnValidationOffForAll();
-                return bll.SaveToDatabase(contactPhone.Text, contactName.Text, contactEmail.Text, customerCode.Text, companyName.Text, companyCity.Text, companyState.Text, companyZip.Text, originalSalesOrder.Text, partNumber.Text, reasonForCall.Text, notesParagraph.Text, callDate.Text, contactNotes, companyNotes);
-                
+                return bll.SaveToDatabase(contactPhone.Text, contactName.Text, contactEmail.Text, customerCode.Text, companyName.Text, companyCity.Text, companyState.Text, companyZip.Text, reasonForCall.Text, notesParagraph.Text, callDate.Text, repEmail.Text, contactNotes, companyNotes);
+
             }
             else
             {
                 TurnValidationOffForAll();
                 return 0;
             }
-            
+
         }
+
+        public int UpdateFormInDatabase()
+        {
+            string contactNotes;
+            string companyNotes = "";
+            if (businessTabControl.TabPages[0].Controls[0].Text != "")
+            {
+                companyNotes = businessTabControl.TabPages[0].Controls[0].Text;
+            }
+            if (contactTabControl.TabPages.Count > 1)
+            {
+                try
+                {
+                    contactNotes = contactTabControl.TabPages[contactName.Text].Controls[0].Text;
+                }
+                catch { contactNotes = ""; }
+            }
+            else
+            {
+                contactNotes = "";
+            }
+            return bll.UpdateCallLogRecord(Convert.ToInt32(callRecord.Text), contactPhone.Text, contactName.Text, contactEmail.Text, customerCode.Text, companyName.Text, companyCity.Text, companyState.Text, companyZip.Text, reasonForCall.Text, notesParagraph.Text, callDate.Text, repEmail.Text, contactNotes, companyNotes);
+        }
+
+
 
         //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
         private void TurnValidationOnForAll()
         {
-            foreach(Control con in this.Controls)
+            foreach (Control con in this.Controls)
             {
                 con.CausesValidation = true;
             }
@@ -200,43 +312,25 @@ namespace FarmchemCallLog
 
         private void TurnValidationOffForAll()
         {
-            foreach(Control con in this.Controls)
+            foreach (Control con in this.Controls)
             {
                 con.CausesValidation = false;
             }
         }
 
-        private void AddRepToEmail_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (repEmail.Text.ToString() == "")
-                {
-                    return;
-                }
-                emails.Text += repEmail.Text.Trim() + ";";
-                btnEmailRep.Text += " " + repEmail.Text.Replace("@farmchem.com", "");
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
 
 
         //convertToRga button, opens an RGA form
         private void ConvertToRga_Click(object sender, EventArgs e)
         {
-                rga = new rgaForm();
-                rga.Customer_Number.Text = this.customerCode.Text.Trim();
-                rga.Contact_Name.Text = this.contactName.Text.Trim();
-                rga.Contact_Phone.Text = this.contactPhone.Text.Trim();
-                rga.Contact_Email.Text = this.contactEmail.Text.Trim();
-                rga.Complaint.Text = this.notesParagraph.Text.Trim();
-                rga.CUSTOMER.Text = this.companyName.Text.Trim();
-                rga.SALES_ORDER.Text = this.originalSalesOrder.Text.Trim();
-                rga.Return_Item_A.Text = this.partNumber.Text.Trim();
-                rga.ShowDialog();
+            rga = new rgaForm();
+            rga.Customer_Number.Text = this.customerCode.Text.Trim();
+            rga.Contact_Name.Text = this.contactName.Text.Trim();
+            rga.Contact_Phone.Text = this.contactPhone.Text.Trim();
+            rga.Contact_Email.Text = this.contactEmail.Text.Trim();
+            rga.Complaint.Text = this.notesParagraph.Text.Trim();
+            rga.CUSTOMER.Text = this.companyName.Text.Trim();
+            rga.ShowDialog();
         }
 
         //clears the form to create a new call
@@ -246,14 +340,12 @@ namespace FarmchemCallLog
             {
                 contactPhone.Text = "";
                 ClearCallerData();
-                originalSalesOrder.Text = "";
-                partNumber.Text = "";
+                ClearContactTabsAndNotes();
+                ClearCompanyNotesText();
                 reasonForCall.Text = "";
                 notesParagraph.Text = "";
-                repEmail.Text = "";
+                outsideRep.Text = "";
                 completedAnswer.Checked = false;
-                btnEmailRep.Text = "Email to";
-                emails.Text = "";
                 contactPhone.Select();
             }
             catch (Exception)
@@ -279,6 +371,13 @@ namespace FarmchemCallLog
                 companyCity.Text = "";
                 companyState.Text = "";
                 companyZip.Text = "";
+                comboCityStateZip.Items.Clear();
+                notesParagraph.Text = "";
+                completedAnswer.Checked = false;
+                repEmail.Text = "";
+                reasonForCall.Text = "";
+                ClearCompanyNotesText();
+                CreateBusinessNotes();
             }
             catch (Exception)
             {
@@ -356,12 +455,12 @@ namespace FarmchemCallLog
 
         private void ContactPhone_Validating(object sender, CancelEventArgs e)
         {
-            if(!IsPhoneNumber(contactPhone.Text))
+            if (!IsPhoneNumber(contactPhone.Text))
             {
                 MessageBox.Show("Please enter a valid phone number");
                 e.Cancel = true;
             }
-            if(contactPhone.TextLength > 20)
+            if (contactPhone.TextLength > 20)
             {
                 MessageBox.Show("Contact phone is too long - please re-enter.");
                 e.Cancel = true;
@@ -371,7 +470,7 @@ namespace FarmchemCallLog
 
         private void ContactName_Validating(object sender, CancelEventArgs e)
         {
-            if(contactName.Text.Length > 50)
+            if (contactName.Text.Length > 50)
             {
                 MessageBox.Show("Contact Name is too long");
                 e.Cancel = true;
@@ -380,11 +479,11 @@ namespace FarmchemCallLog
 
         private void ContactEmail_Validating(object sender, CancelEventArgs e)
         {
-            if(contactEmail.Text.Length == 0)
+            if (contactEmail.Text.Length == 0)
             {
                 return;
             }
-            if(!IsValidEmail(contactEmail.Text))
+            if (!IsValidEmail(contactEmail.Text))
             {
                 DialogResult result = MessageBox.Show("It appears your email may not be formatted correctly, would you like to save anyway?", "Warning!", MessageBoxButtons.YesNo);
                 if (result == DialogResult.Yes)
@@ -404,13 +503,13 @@ namespace FarmchemCallLog
             }
         }
 
-        private void Button2_Click(object sender, EventArgs e)
+        private void AddAddress_Click(object sender, EventArgs e)
         {
-            using(addAddress = new AddAddressForm())
+            using (addAddress = new AddAddressForm())
             {
-                if(addAddress.ShowDialog() == DialogResult.OK)
+                if (addAddress.ShowDialog() == DialogResult.OK)
                 {
-                    companyCity.Text = addAddress.addCompanyCity.Text.Replace(",","");
+                    companyCity.Text = addAddress.addCompanyCity.Text.Replace(",", "");
                     companyState.Text = addAddress.addCompanyState.Text.Replace(",", "");
                     companyZip.Text = addAddress.addCompanyZip.Text.Replace(",", "");
                 }
@@ -473,42 +572,6 @@ namespace FarmchemCallLog
             }
         }
 
-        private void PartNumber_Validating(object sender, CancelEventArgs e)
-        {
-            if (partNumber.Text.Length > 50)
-            {
-                MessageBox.Show("Part number field is too long - please be more succint.");
-                e.Cancel = true;
-            }
-        }
-
-        private void OriginalSalesOrder_Validating(object sender, CancelEventArgs e)
-        {
-            if (originalSalesOrder.Text.Length > 50)
-            {
-                MessageBox.Show("Sales order field text is too long - please be more succint.");
-                e.Cancel = true;
-            }
-        }
-
-
-
-
-
-
-        //populates the notes from a previous call for a bigger viewing area
-        private void PopulateNotesFromCall_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                contactNotes.Visible = true;
-                contactNotes.Text = dataGridView1.CurrentRow.Cells[6].Value.ToString();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
 
         //this is based on combocitystatezip being saved in the database with ', ' between each value
         //all commas removed from add address
@@ -518,46 +581,105 @@ namespace FarmchemCallLog
             companyState.Text = "";
             companyZip.Text = "";
             string[] line = comboCityStateZip.Text.Split(',');
-            companyCity.Text = line[0].Trim();
-            companyState.Text = line[1].Trim();
-            companyZip.Text = line[2].Trim();                
-        }
+            if (line.Length == 3)
+            {
+                companyCity.Text = line[0].Trim();
+                companyState.Text = line[1].Trim();
+                companyZip.Text = line[2].Trim();
+            }
 
-        private void ContactName_SelectedValueChanged(object sender, EventArgs e)
-        {
-            if (contactName.Text == null || customerNotes.TabCount < 2)
-            {
-                return;
-            }
-            else
-            {
-                try
-                {
-                    SelectTabBasedOnSelectedContact();
-                }
-                catch
-                {
-                }
-            }
         }
 
         private void SelectTabBasedOnSelectedContact()
         {
-            if (contactName.Text == null || customerNotes.TabCount < 2)
+            try
+            {
+                if (contactName.Text == "" || contactTabControl.TabCount <= 1)
+                {
+                    return;
+                }
+                else
+                {
+                    contactTabControl.SelectTab(contactName.Text);
+                }
+            }
+            catch
+            {
+
+            }
+            
+        }
+
+        private void BtnDelete_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Do you want to delete the currently loaded call?", "Warning!", MessageBoxButtons.YesNo);
+            if (result == DialogResult.Yes)
+            {
+
+            }
+            else if (result == DialogResult.No)
             {
                 return;
             }
-            else
+        }
+
+        private void LoadCallBasedOnGrid_Click(object sender, EventArgs e)
+        {
+            if(callLogGridView.SelectedCells.Count == 0 || Convert.ToInt32(callLogGridView.Rows[callLogGridView.CurrentRow.Index].Cells[0].Value.ToString()) < 1)
             {
-                try
+                MessageBox.Show("Guy/gal, please select a call from the below grid and try again.");
+                return;
+            }
+            DialogResult result = MessageBox.Show("Do you want to overwrite information in the form currently?", "Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+            if (result == DialogResult.Yes)
+            {
+                var recordNum = callLogGridView.Rows[callLogGridView.CurrentRow.Index].Cells[0].Value.ToString();
+                PopulateCallLogFieldsByDataTable(bll.GetDataTableOfCallLogByRecordNumber(recordNum));
+                callRecord.Text = recordNum;
+                SelectTabBasedOnSelectedContact();
+            }
+            else if (result == DialogResult.No)
+            {
+                return;
+            }
+        }
+
+        private void PopulateCallLogFieldsByDataTable(DataTable table)
+        {
+            contactPhone.Text = table.Rows[0]["contactPhone"].ToString();
+            contactName.Text = table.Rows[0]["contactName"].ToString();
+            contactEmail.Text = table.Rows[0]["contactEmail"].ToString();
+            customerCode.Text = table.Rows[0]["customerCode"].ToString();
+            companyName.Text = table.Rows[0]["companyName"].ToString();
+            companyCity.Text = table.Rows[0]["companyCity"].ToString();
+            companyState.Text = table.Rows[0]["companyState"].ToString();
+            companyZip.Text = table.Rows[0]["companyZip"].ToString();
+            reasonForCall.Text = table.Rows[0]["reasonForCall"].ToString();
+            notesParagraph.Text = table.Rows[0]["notesParagraph"].ToString();
+            if(table.Rows[0]["customerCode"].ToString() == "yes")
+            {
+                completedAnswer.Checked = true;
+            }
+            outsideRep.Text = table.Rows[0]["outsideRep"].ToString();
+            CreateContactsAndNotesTabs(bll.GetNameList(contactPhone.Text));
+            CreateBusinessNotes();
+        }
+
+        private void SearchButton_Click(object sender, EventArgs e)
+        {
+            using (searchForm = new SearchForm())
+            {
+                if (searchForm.ShowDialog() == DialogResult.OK)
                 {
-                    customerNotes.SelectTab(contactName.Text);
-                }
-                catch
-                {
+                    callLogGridView.DataSource = bll.GetCallLogDataTableBySearchFromDB(searchForm.SearchValue);
                 }
             }
         }
 
+        private void ContactName_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SelectTabBasedOnSelectedContact();
+            contactName.Select();
+        }
     }
 }

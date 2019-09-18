@@ -113,6 +113,8 @@
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.emailToRepSent = new System.Windows.Forms.CheckBox();
+            this.button4 = new System.Windows.Forms.Button();
             this.vendor_rga = new System.Windows.Forms.TextBox();
             this.vendorRGALabel = new System.Windows.Forms.Label();
             this.txtQtyReturnedA = new System.Windows.Forms.TextBox();
@@ -144,9 +146,7 @@
             this.label50 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
-            this.emailToRepSent = new System.Windows.Forms.CheckBox();
-            this.button4 = new System.Windows.Forms.Button();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.Outside_Rep = new System.Windows.Forms.ComboBox();
             this.label51 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -275,7 +275,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(20, 193);
+            this.label8.Location = new System.Drawing.Point(19, 174);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(404, 13);
             this.label8.TabIndex = 17;
@@ -348,7 +348,7 @@
                 "___________________________",
             "1h. Other/Comments - ",
             " "});
-            this.RGA_Type.Location = new System.Drawing.Point(15, 209);
+            this.RGA_Type.Location = new System.Drawing.Point(12, 190);
             this.RGA_Type.Name = "RGA_Type";
             this.RGA_Type.Size = new System.Drawing.Size(653, 21);
             this.RGA_Type.TabIndex = 12;
@@ -899,6 +899,26 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Auto Generated Emails";
             // 
+            // emailToRepSent
+            // 
+            this.emailToRepSent.AutoSize = true;
+            this.emailToRepSent.Location = new System.Drawing.Point(7, 64);
+            this.emailToRepSent.Name = "emailToRepSent";
+            this.emailToRepSent.Size = new System.Drawing.Size(96, 17);
+            this.emailToRepSent.TabIndex = 121;
+            this.emailToRepSent.Text = "Email Not Sent";
+            this.emailToRepSent.UseVisualStyleBackColor = true;
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(7, 19);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(134, 39);
+            this.button4.TabIndex = 120;
+            this.button4.Text = "Send Email to Rep";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.Button4_Click);
+            // 
             // vendor_rga
             // 
             this.vendor_rga.Location = new System.Drawing.Point(328, 91);
@@ -1019,7 +1039,7 @@
             // bruceCredit
             // 
             this.bruceCredit.AutoSize = true;
-            this.bruceCredit.Location = new System.Drawing.Point(20, 193);
+            this.bruceCredit.Location = new System.Drawing.Point(17, 214);
             this.bruceCredit.Name = "bruceCredit";
             this.bruceCredit.Size = new System.Drawing.Size(0, 13);
             this.bruceCredit.TabIndex = 140;
@@ -1167,30 +1187,10 @@
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.LoadRGAVersion_Click);
             // 
-            // emailToRepSent
+            // Outside_Rep
             // 
-            this.emailToRepSent.AutoSize = true;
-            this.emailToRepSent.Location = new System.Drawing.Point(7, 64);
-            this.emailToRepSent.Name = "emailToRepSent";
-            this.emailToRepSent.Size = new System.Drawing.Size(96, 17);
-            this.emailToRepSent.TabIndex = 121;
-            this.emailToRepSent.Text = "Email Not Sent";
-            this.emailToRepSent.UseVisualStyleBackColor = true;
-            // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(7, 19);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(134, 39);
-            this.button4.TabIndex = 120;
-            this.button4.Text = "Send Email to Rep";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.Button4_Click);
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
+            this.Outside_Rep.FormattingEnabled = true;
+            this.Outside_Rep.Items.AddRange(new object[] {
             "steve.flanders@farmchem.com",
             "adam.thompson@farmchem.com",
             "noah.macpherson@farmchem.com",
@@ -1200,10 +1200,10 @@
             "ashley.mccloughan@farmchem.com",
             "chad.simonson@farmchem.com",
             "douglas.harms@farmchem.com"});
-            this.comboBox1.Location = new System.Drawing.Point(328, 144);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(100, 21);
-            this.comboBox1.TabIndex = 158;
+            this.Outside_Rep.Location = new System.Drawing.Point(328, 144);
+            this.Outside_Rep.Name = "Outside_Rep";
+            this.Outside_Rep.Size = new System.Drawing.Size(191, 21);
+            this.Outside_Rep.TabIndex = 158;
             // 
             // label51
             // 
@@ -1219,7 +1219,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(687, 930);
-            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.Outside_Rep);
             this.Controls.Add(this.label51);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
@@ -1462,7 +1462,7 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.CheckBox emailToRepSent;
         private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox Outside_Rep;
         private System.Windows.Forms.Label label51;
     }
 }
