@@ -11,6 +11,7 @@ using System.Net;
 using System.Net.Mail;
 using BLL;
 using System.Text.RegularExpressions;
+using Outlook = Microsoft.Office.Interop.Outlook;
 
 namespace FarmchemCallLog
 {
@@ -19,9 +20,7 @@ namespace FarmchemCallLog
         public rgaForm rga;
         public AddAddressForm addAddress;
         public SearchForm searchForm;
-        BusinessLogicLayer bll = new BusinessLogicLayer();
-
-
+        private readonly BusinessLogicLayer bll = new BusinessLogicLayer();
 
 
         public Form1()
@@ -29,7 +28,6 @@ namespace FarmchemCallLog
             InitializeComponent();
             contactPhone.Select();
         }
-
 
         private void ContactPhone_LostFocus(object sender, EventArgs e)
         {
@@ -52,7 +50,14 @@ namespace FarmchemCallLog
                     SetCityStateZip();
                     PopulateDataGridViewByPhoneCompanyCity();
                 }
-                SelectTabBasedOnSelectedContact();
+                if (contactTabControl.TabPages.ContainsKey(contactName.Text) == false)
+                {
+                    contactName.Select();
+                }
+                else
+                {
+                    SelectTabBasedOnSelectedContact();
+                }
             }
             else
             {
@@ -71,7 +76,15 @@ namespace FarmchemCallLog
                         SetCityStateZip();
                         PopulateDataGridViewByPhoneCompanyCity();
                     }
-                    SelectTabBasedOnSelectedContact();
+                    if (contactTabControl.TabPages.ContainsKey(contactName.Text) == false)
+                    {
+                        contactName.Select();
+                    }
+                    else
+                    {
+                        SelectTabBasedOnSelectedContact();
+                        contactName.Select();
+                    }
                 }
                 else if (result == DialogResult.No)
                 {
@@ -82,6 +95,7 @@ namespace FarmchemCallLog
 
         private void ContactName_LostFocus(object sender, EventArgs e)
         {
+            bool createdNewTab = false;
             try
             {
                 if (contactTabControl.TabPages.ContainsKey(contactName.Text) == false && contactName.Text != "")
@@ -92,18 +106,21 @@ namespace FarmchemCallLog
                     contactTabControl.TabPages.Add(newTab);
                     newTab.Name = contactName.Text;
                     newTab.Controls.Add(textbox);
+                    createdNewTab = true;
                 }
                 SetContactEmail();
                 SetCompanyName();
                 SetCityStateZip();
-
-
+                SelectTabBasedOnSelectedContact();
+                if(createdNewTab)
+                {
+                    contactEmail.Select();
+                }
             }
             catch
             {
                 MessageBox.Show("Error populating data with contact name.");
             }
-            SelectTabBasedOnSelectedContact();
         }
 
         public void PopulateDataGridViewByPhoneCompanyCity()
@@ -151,7 +168,7 @@ namespace FarmchemCallLog
             var list = bll.GetNameList(contactPhone.Text);
             if (list.Length == 1 && list[0] == "" || list.Length == 0)
             {
-
+                return;
             }
             else
             {
@@ -348,7 +365,7 @@ namespace FarmchemCallLog
                 completedAnswer.Checked = false;
                 contactPhone.Select();
             }
-            catch (Exception)
+            catch
             {
 
                 throw;
@@ -379,54 +396,56 @@ namespace FarmchemCallLog
                 ClearCompanyNotesText();
                 CreateBusinessNotes();
             }
-            catch (Exception)
+            catch
             {
                 MessageBox.Show("Hi guy/gal, there was an issue trying to ClearCallerData(). Please snip the screen and send to IT/Eric.");
             }
         }
 
-
-
-        //generates email to be sent to an outside
-        //I want 'btnEmailRep to'(Button3_Click) to pull open a new outlook message for us to look over before actually sending
-        // -'Email to' button 
         private void EmailRep_Click(object sender, EventArgs e)
         {
             try
             {
-                var fromAddress = new MailAddress("fccalllogtest@gmail.com", "Eric Kobliska");
-                //I would use 'emails.Text' in place of erickobliska@gmail.com here
-                var toAddress = new MailAddress("erickobliska@gmail.com", "Eric K");
-                const string FROMPASSWORD = "thisispassword";
-                string subject = $"{reasonForCall.Text} call from {contactName.Text} at {companyName.Text}";
-                string body = $"{contactName.Text} called from {companyName.Text} in {comboCityStateZip.Text}. Their contact info is {contactPhone.Text} & {contactEmail.Text}. The reason they called: {notesParagraph.Text}.";
+                //var fromAddress = new MailAddress("fccalllogtest@gmail.com", "Eric Kobliska");
+                ////I would use 'emails.Text' in place of erickobliska@gmail.com here
+                //var toAddress = new MailAddress("erickobliska@gmail.com", "Eric K");
+                //const string FROMPASSWORD = "thisispassword";
+                //string subject = $"{reasonForCall.Text} call from {contactName.Text} at {companyName.Text}";
+                //string body = $"{contactName.Text} called from {companyName.Text} in {comboCityStateZip.Text}. Their contact info is {contactPhone.Text} & {contactEmail.Text}. The reason they called: {notesParagraph.Text}.";
 
 
-                var smtp = new SmtpClient
-                {
-                    Host = "smtp.gmail.com",
-                    Port = 587,
-                    EnableSsl = true,
-                    DeliveryMethod = SmtpDeliveryMethod.Network,
-                    UseDefaultCredentials = false,
-                    Credentials = new NetworkCredential(fromAddress.Address, FROMPASSWORD)
-                };
-                using (var message = new MailMessage(fromAddress, toAddress)
-                {
-                    Subject = subject,
-                    Body = body
-                })
+                //var smtp = new SmtpClient
+                //{
+                //    Host = "smtp.gmail.com",
+                //    Port = 587,
+                //    EnableSsl = true,
+                //    DeliveryMethod = SmtpDeliveryMethod.Network,
+                //    UseDefaultCredentials = false,
+                //    Credentials = new NetworkCredential(fromAddress.Address, FROMPASSWORD)
+                //};
+                //using (var message = new MailMessage(fromAddress, toAddress)
+                //{
+                //    Subject = subject,
+                //    Body = body
+                //})
 
-                {
-                    smtp.Send(message);
-                    MessageBox.Show("Email sent successfully.");
-                }
-                this.checkBox1.Checked = true;
-                this.checkBox1.Text = "Call record sent to rep(s).";
+                //{
+                //    smtp.Send(message);
+                //    MessageBox.Show("Email sent successfully.");
+                //}
+                //this.checkBox1.Checked = true;
+                //this.checkBox1.Text = "Call record sent to rep(s).";
+                //smtp.Dispose();
+                Outlook.Application oApp = new Outlook.Application();
+                Outlook._MailItem oMailItem = (Outlook._MailItem)oApp.CreateItem(Outlook.OlItemType.olMailItem);
+                Outlook.Recipients oRecips = (Outlook.Recipients)oMailItem.Recipients;
+                Outlook.Recipient oRecip = (Outlook.Recipient)oRecips.Add(repEmail.Text);
+                oMailItem.Subject = $"{reasonForCall.Text} call from {contactName.Text} at {companyName.Text}";
+                oMailItem.Body = $"{contactName.Text} called from {companyName.Text} in {comboCityStateZip.Text}. Their contact info is {contactPhone.Text} & {contactEmail.Text}. The reason they called: {notesParagraph.Text}.";
+                oMailItem.Display(true);
             }
-            catch (Exception)
+            catch
             {
-
                 throw;
             }
         }

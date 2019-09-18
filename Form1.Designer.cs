@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.table1BindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.table1BindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.notesParagraph = new System.Windows.Forms.RichTextBox();
@@ -135,7 +134,7 @@
             this.notesParagraph.Location = new System.Drawing.Point(150, 192);
             this.notesParagraph.Name = "notesParagraph";
             this.notesParagraph.Size = new System.Drawing.Size(448, 215);
-            this.notesParagraph.TabIndex = 12;
+            this.notesParagraph.TabIndex = 9;
             this.notesParagraph.Text = "";
             // 
             // label9
@@ -214,7 +213,6 @@
             // bindingNavigatorAddNewItem
             // 
             this.bindingNavigatorAddNewItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.bindingNavigatorAddNewItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorAddNewItem.Image")));
             this.bindingNavigatorAddNewItem.Name = "bindingNavigatorAddNewItem";
             this.bindingNavigatorAddNewItem.RightToLeftAutoMirrorImage = true;
             this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(23, 22);
@@ -230,7 +228,6 @@
             // bindingNavigatorDeleteItem
             // 
             this.bindingNavigatorDeleteItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.bindingNavigatorDeleteItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorDeleteItem.Image")));
             this.bindingNavigatorDeleteItem.Name = "bindingNavigatorDeleteItem";
             this.bindingNavigatorDeleteItem.RightToLeftAutoMirrorImage = true;
             this.bindingNavigatorDeleteItem.Size = new System.Drawing.Size(23, 22);
@@ -239,7 +236,6 @@
             // bindingNavigatorMoveFirstItem
             // 
             this.bindingNavigatorMoveFirstItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.bindingNavigatorMoveFirstItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMoveFirstItem.Image")));
             this.bindingNavigatorMoveFirstItem.Name = "bindingNavigatorMoveFirstItem";
             this.bindingNavigatorMoveFirstItem.RightToLeftAutoMirrorImage = true;
             this.bindingNavigatorMoveFirstItem.Size = new System.Drawing.Size(23, 22);
@@ -248,7 +244,6 @@
             // bindingNavigatorMovePreviousItem
             // 
             this.bindingNavigatorMovePreviousItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.bindingNavigatorMovePreviousItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMovePreviousItem.Image")));
             this.bindingNavigatorMovePreviousItem.Name = "bindingNavigatorMovePreviousItem";
             this.bindingNavigatorMovePreviousItem.RightToLeftAutoMirrorImage = true;
             this.bindingNavigatorMovePreviousItem.Size = new System.Drawing.Size(23, 22);
@@ -276,7 +271,6 @@
             // bindingNavigatorMoveNextItem
             // 
             this.bindingNavigatorMoveNextItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.bindingNavigatorMoveNextItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMoveNextItem.Image")));
             this.bindingNavigatorMoveNextItem.Name = "bindingNavigatorMoveNextItem";
             this.bindingNavigatorMoveNextItem.RightToLeftAutoMirrorImage = true;
             this.bindingNavigatorMoveNextItem.Size = new System.Drawing.Size(23, 22);
@@ -285,7 +279,6 @@
             // bindingNavigatorMoveLastItem
             // 
             this.bindingNavigatorMoveLastItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.bindingNavigatorMoveLastItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMoveLastItem.Image")));
             this.bindingNavigatorMoveLastItem.Name = "bindingNavigatorMoveLastItem";
             this.bindingNavigatorMoveLastItem.RightToLeftAutoMirrorImage = true;
             this.bindingNavigatorMoveLastItem.Size = new System.Drawing.Size(23, 22);
@@ -346,7 +339,7 @@
             this.repEmail.Location = new System.Drawing.Point(313, 151);
             this.repEmail.Name = "repEmail";
             this.repEmail.Size = new System.Drawing.Size(207, 21);
-            this.repEmail.TabIndex = 13;
+            this.repEmail.TabIndex = 8;
             // 
             // emails
             // 
@@ -376,7 +369,7 @@
             this.reasonForCall.Location = new System.Drawing.Point(150, 151);
             this.reasonForCall.Name = "reasonForCall";
             this.reasonForCall.Size = new System.Drawing.Size(155, 21);
-            this.reasonForCall.TabIndex = 9;
+            this.reasonForCall.TabIndex = 7;
             this.reasonForCall.Validating += new System.ComponentModel.CancelEventHandler(this.ReasonForCall_Validating);
             // 
             // completedAnswer
@@ -443,7 +436,7 @@
             this.contactPhone.Location = new System.Drawing.Point(150, 33);
             this.contactPhone.Name = "contactPhone";
             this.contactPhone.Size = new System.Drawing.Size(155, 20);
-            this.contactPhone.TabIndex = 1;
+            this.contactPhone.TabIndex = 0;
             this.contactPhone.LostFocus += new System.EventHandler(this.ContactPhone_LostFocus);
             this.contactPhone.Validating += new System.ComponentModel.CancelEventHandler(this.ContactPhone_Validating);
             // 
@@ -454,7 +447,7 @@
             this.contactEmail.Location = new System.Drawing.Point(472, 31);
             this.contactEmail.Name = "contactEmail";
             this.contactEmail.Size = new System.Drawing.Size(155, 21);
-            this.contactEmail.TabIndex = 3;
+            this.contactEmail.TabIndex = 2;
             this.contactEmail.Validating += new System.ComponentModel.CancelEventHandler(this.ContactEmail_Validating);
             // 
             // customerCode
@@ -464,7 +457,7 @@
             this.customerCode.Location = new System.Drawing.Point(150, 75);
             this.customerCode.Name = "customerCode";
             this.customerCode.Size = new System.Drawing.Size(155, 21);
-            this.customerCode.TabIndex = 4;
+            this.customerCode.TabIndex = 3;
             this.customerCode.Validating += new System.ComponentModel.CancelEventHandler(this.CustomerCode_Validating);
             // 
             // label1
@@ -483,7 +476,7 @@
             this.companyName.Location = new System.Drawing.Point(311, 75);
             this.companyName.Name = "companyName";
             this.companyName.Size = new System.Drawing.Size(155, 21);
-            this.companyName.TabIndex = 5;
+            this.companyName.TabIndex = 4;
             // 
             // contactName
             // 
@@ -492,7 +485,7 @@
             this.contactName.Location = new System.Drawing.Point(311, 32);
             this.contactName.Name = "contactName";
             this.contactName.Size = new System.Drawing.Size(155, 21);
-            this.contactName.TabIndex = 2;
+            this.contactName.TabIndex = 1;
             this.contactName.SelectedIndexChanged += new System.EventHandler(this.ContactName_SelectedIndexChanged);
             this.contactName.LostFocus += new System.EventHandler(this.ContactName_LostFocus);
             this.contactName.Validating += new System.ComponentModel.CancelEventHandler(this.ContactName_Validating);
@@ -607,7 +600,7 @@
             this.comboCityStateZip.Location = new System.Drawing.Point(150, 112);
             this.comboCityStateZip.Name = "comboCityStateZip";
             this.comboCityStateZip.Size = new System.Drawing.Size(316, 21);
-            this.comboCityStateZip.TabIndex = 40;
+            this.comboCityStateZip.TabIndex = 5;
             this.comboCityStateZip.SelectedIndexChanged += new System.EventHandler(this.ComboCityStateZip_SelectedIndexChanged);
             // 
             // button2
@@ -615,7 +608,7 @@
             this.button2.Location = new System.Drawing.Point(472, 112);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(122, 22);
-            this.button2.TabIndex = 41;
+            this.button2.TabIndex = 6;
             this.button2.Text = "Add New Address";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.AddAddress_Click);
@@ -661,7 +654,7 @@
             this.businessTabControl.Name = "businessTabControl";
             this.businessTabControl.SelectedIndex = 0;
             this.businessTabControl.Size = new System.Drawing.Size(382, 179);
-            this.businessTabControl.TabIndex = 47;
+            this.businessTabControl.TabIndex = 10;
             // 
             // businessNotes
             // 
@@ -746,7 +739,7 @@
             this.contactTabControl.Name = "contactTabControl";
             this.contactTabControl.SelectedIndex = 0;
             this.contactTabControl.Size = new System.Drawing.Size(382, 165);
-            this.contactTabControl.TabIndex = 55;
+            this.contactTabControl.TabIndex = 11;
             // 
             // tabPage1
             // 
