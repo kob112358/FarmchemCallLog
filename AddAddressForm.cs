@@ -33,9 +33,22 @@ namespace FarmchemCallLog
             get { return addCompanyZip.Text; }
         }
 
-        private void Button1_Click(object sender, EventArgs e)
+        private void AddAddressButton(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
+        }
+
+
+        private void AddAddressForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Escape)
+            {
+                this.Close();
+            }
+            if(e.KeyCode == Keys.Enter)
+            {
+                AddAddressButton(sender, e);
+            }
         }
     }
 

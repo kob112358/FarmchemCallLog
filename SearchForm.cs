@@ -24,9 +24,21 @@ namespace FarmchemCallLog
             get { return searchValue.Text; }
         }
 
-        private void Button1_Click(object sender, EventArgs e)
+        private void SearchButton_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
+        }
+
+        private void SearchForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Escape)
+            {
+                this.Close();
+            }
+            if(e.KeyCode == Keys.Enter)
+            {
+                SearchButton_Click(sender, e);
+            }
         }
     }
 }

@@ -55,7 +55,6 @@
             this.modifydataCallLogBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.repEmail = new System.Windows.Forms.ComboBox();
-            this.emails = new System.Windows.Forms.TextBox();
             this.modifyCallLogDataSetBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.modifydataCallLogBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.btnNewCall = new System.Windows.Forms.Button();
@@ -90,7 +89,6 @@
             this.companyCity = new System.Windows.Forms.TextBox();
             this.companyZip = new System.Windows.Forms.TextBox();
             this.companyState = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
             this.businessTabControl = new System.Windows.Forms.TabControl();
             this.businessNotes = new System.Windows.Forms.TabPage();
             this.button3 = new System.Windows.Forms.Button();
@@ -98,7 +96,7 @@
             this.callRecordNum = new System.Windows.Forms.Label();
             this.callRecordNumber = new System.Windows.Forms.Label();
             this.button5 = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
+            this.btnSearch = new System.Windows.Forms.Button();
             this.outsideRep = new System.Windows.Forms.Label();
             this.contactTabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -173,6 +171,7 @@
             this.btnEmailRep.Name = "btnEmailRep";
             this.btnEmailRep.Size = new System.Drawing.Size(68, 22);
             this.btnEmailRep.TabIndex = 15;
+            this.btnEmailRep.TabStop = false;
             this.btnEmailRep.Text = "Email Rep";
             this.btnEmailRep.UseVisualStyleBackColor = true;
             this.btnEmailRep.Click += new System.EventHandler(this.EmailRep_Click);
@@ -295,11 +294,11 @@
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(11, 77);
+            this.btnSave.Location = new System.Drawing.Point(12, 33);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(100, 38);
-            this.btnSave.TabIndex = 16;
-            this.btnSave.Text = "Save Call";
+            this.btnSave.TabIndex = 13;
+            this.btnSave.Text = "Save Call (F4)";
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.BtnSave_Click);
             // 
@@ -341,20 +340,13 @@
             this.repEmail.Size = new System.Drawing.Size(207, 21);
             this.repEmail.TabIndex = 8;
             // 
-            // emails
-            // 
-            this.emails.Location = new System.Drawing.Point(95, -4);
-            this.emails.Name = "emails";
-            this.emails.Size = new System.Drawing.Size(0, 20);
-            this.emails.TabIndex = 8;
-            // 
             // btnNewCall
             // 
-            this.btnNewCall.Location = new System.Drawing.Point(11, 33);
+            this.btnNewCall.Location = new System.Drawing.Point(12, 77);
             this.btnNewCall.Name = "btnNewCall";
             this.btnNewCall.Size = new System.Drawing.Size(100, 38);
-            this.btnNewCall.TabIndex = 18;
-            this.btnNewCall.Text = "New Call";
+            this.btnNewCall.TabIndex = 14;
+            this.btnNewCall.Text = "New Call (F2)";
             this.btnNewCall.UseVisualStyleBackColor = true;
             this.btnNewCall.Click += new System.EventHandler(this.BtnNewCall_Click);
             // 
@@ -378,7 +370,7 @@
             this.completedAnswer.Location = new System.Drawing.Point(507, 411);
             this.completedAnswer.Name = "completedAnswer";
             this.completedAnswer.Size = new System.Drawing.Size(91, 17);
-            this.completedAnswer.TabIndex = 19;
+            this.completedAnswer.TabIndex = 12;
             this.completedAnswer.Text = "Call Resolved";
             this.completedAnswer.UseVisualStyleBackColor = true;
             // 
@@ -522,7 +514,8 @@
             this.callLogGridView.Location = new System.Drawing.Point(12, 436);
             this.callLogGridView.Name = "callLogGridView";
             this.callLogGridView.Size = new System.Drawing.Size(986, 220);
-            this.callLogGridView.TabIndex = 38;
+            this.callLogGridView.TabIndex = 99;
+            this.callLogGridView.TabStop = false;
             // 
             // Record
             // 
@@ -615,36 +608,30 @@
             // 
             // companyCity
             // 
-            this.companyCity.Location = new System.Drawing.Point(413, 662);
+            this.companyCity.Location = new System.Drawing.Point(637, 408);
             this.companyCity.Name = "companyCity";
-            this.companyCity.Size = new System.Drawing.Size(77, 20);
+            this.companyCity.Size = new System.Drawing.Size(0, 20);
             this.companyCity.TabIndex = 42;
+            this.companyCity.TabStop = false;
             this.companyCity.Validating += new System.ComponentModel.CancelEventHandler(this.CompanyCity_Validating);
             // 
             // companyZip
             // 
-            this.companyZip.Location = new System.Drawing.Point(622, 662);
+            this.companyZip.Location = new System.Drawing.Point(696, 408);
             this.companyZip.Name = "companyZip";
-            this.companyZip.Size = new System.Drawing.Size(103, 20);
+            this.companyZip.Size = new System.Drawing.Size(0, 20);
             this.companyZip.TabIndex = 43;
+            this.companyZip.TabStop = false;
             this.companyZip.Validating += new System.ComponentModel.CancelEventHandler(this.CompanyZip_Validating);
             // 
             // companyState
             // 
-            this.companyState.Location = new System.Drawing.Point(516, 662);
+            this.companyState.Location = new System.Drawing.Point(662, 408);
             this.companyState.Name = "companyState";
-            this.companyState.Size = new System.Drawing.Size(84, 20);
+            this.companyState.Size = new System.Drawing.Size(0, 20);
             this.companyState.TabIndex = 44;
+            this.companyState.TabStop = false;
             this.companyState.Validating += new System.ComponentModel.CancelEventHandler(this.CompanyState_Validating_1);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(333, 665);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(73, 13);
-            this.label4.TabIndex = 45;
-            this.label4.Text = "CityStateZip->";
             // 
             // businessTabControl
             // 
@@ -671,7 +658,7 @@
             this.button3.Location = new System.Drawing.Point(12, 244);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(100, 40);
-            this.button3.TabIndex = 48;
+            this.button3.TabIndex = 16;
             this.button3.Text = "Update";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.BtnUpdate_Click);
@@ -681,7 +668,7 @@
             this.button4.Location = new System.Drawing.Point(12, 290);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(100, 40);
-            this.button4.TabIndex = 49;
+            this.button4.TabIndex = 17;
             this.button4.Text = "Delete";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.BtnDelete_Click);
@@ -708,20 +695,20 @@
             this.button5.Location = new System.Drawing.Point(12, 390);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(100, 40);
-            this.button5.TabIndex = 52;
+            this.button5.TabIndex = 18;
             this.button5.Text = "Load Call From Grid";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.LoadCallBasedOnGrid_Click);
             // 
-            // button6
+            // btnSearch
             // 
-            this.button6.Location = new System.Drawing.Point(12, 198);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(100, 40);
-            this.button6.TabIndex = 53;
-            this.button6.Text = "Search";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.SearchButton_Click);
+            this.btnSearch.Location = new System.Drawing.Point(12, 198);
+            this.btnSearch.Name = "btnSearch";
+            this.btnSearch.Size = new System.Drawing.Size(100, 40);
+            this.btnSearch.TabIndex = 15;
+            this.btnSearch.Text = "Search (F5)";
+            this.btnSearch.UseVisualStyleBackColor = true;
+            this.btnSearch.Click += new System.EventHandler(this.SearchButton_Click);
             // 
             // outsideRep
             // 
@@ -763,18 +750,17 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1006, 658);
+            this.ClientSize = new System.Drawing.Size(1006, 673);
             this.Controls.Add(this.callRecord);
             this.Controls.Add(this.contactTabControl);
             this.Controls.Add(this.outsideRep);
-            this.Controls.Add(this.button6);
+            this.Controls.Add(this.btnSearch);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.callRecordNumber);
             this.Controls.Add(this.callRecordNum);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.businessTabControl);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this.companyState);
             this.Controls.Add(this.companyZip);
             this.Controls.Add(this.companyCity);
@@ -789,7 +775,6 @@
             this.Controls.Add(this.contactName);
             this.Controls.Add(this.companyName);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.emails);
             this.Controls.Add(this.customerCode);
             this.Controls.Add(this.contactEmail);
             this.Controls.Add(this.repEmail);
@@ -806,9 +791,11 @@
             this.Controls.Add(this.label9);
             this.Controls.Add(this.notesParagraph);
             this.Controls.Add(this.bindingNavigator1);
+            this.KeyPreview = true;
             this.Name = "Form1";
             this.Tag = "contactPhone";
             this.Text = "Call Log";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.table1BindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.table1BindingSource1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.databaseCallLogBindingSource)).EndInit();
@@ -856,7 +843,6 @@
         private System.Windows.Forms.BindingSource modifydataCallLogBindingSource;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.ComboBox repEmail;
-        private System.Windows.Forms.TextBox emails;
         private System.Windows.Forms.BindingSource modifyCallLogDataSetBindingSource;
         private System.Windows.Forms.BindingSource modifydataCallLogBindingSource1;
         private System.Windows.Forms.Button btnNewCall;
@@ -884,7 +870,6 @@
         private System.Windows.Forms.TextBox companyCity;
         private System.Windows.Forms.TextBox companyZip;
         private System.Windows.Forms.TextBox companyState;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TabControl businessTabControl;
         public System.Windows.Forms.TabPage businessNotes;
         private System.Windows.Forms.Button button3;
@@ -892,7 +877,7 @@
         private System.Windows.Forms.Label callRecordNum;
         private System.Windows.Forms.Label callRecordNumber;
         private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.Label outsideRep;
         private System.Windows.Forms.DataGridViewTextBoxColumn Record;
         private System.Windows.Forms.DataGridViewTextBoxColumn callDateDataGridViewTextBoxColumn;

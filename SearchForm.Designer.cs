@@ -40,7 +40,7 @@
             this.button1.TabIndex = 0;
             this.button1.Text = "Search";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.Button1_Click);
+            this.button1.Click += new System.EventHandler(this.SearchButton_Click);
             // 
             // searchValue
             // 
@@ -56,8 +56,10 @@
             this.ClientSize = new System.Drawing.Size(292, 106);
             this.Controls.Add(this.searchValue);
             this.Controls.Add(this.button1);
+            this.KeyPreview = true;
             this.Name = "SearchForm";
             this.Text = "SearchForm";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SearchForm_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

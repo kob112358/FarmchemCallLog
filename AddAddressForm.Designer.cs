@@ -93,7 +93,7 @@
             this.button1.TabIndex = 19;
             this.button1.Text = "Add";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.Button1_Click);
+            this.button1.Click += new System.EventHandler(this.AddAddressButton);
             // 
             // AddAddressForm
             // 
@@ -107,8 +107,10 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label3);
+            this.KeyPreview = true;
             this.Name = "AddAddressForm";
             this.Text = "AddAddressForm";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AddAddressForm_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

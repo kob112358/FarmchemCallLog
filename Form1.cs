@@ -31,38 +31,15 @@ namespace FarmchemCallLog
 
         private void ContactPhone_LostFocus(object sender, EventArgs e)
         {
-            if(String.IsNullOrEmpty(contactPhone.Text))
+            try
             {
-                return;
-            }
-            if(String.IsNullOrEmpty(contactName.Text) && String.IsNullOrEmpty(contactEmail.Text) && String.IsNullOrEmpty(customerCode.Text) && String.IsNullOrEmpty(companyName.Text)
-                && String.IsNullOrEmpty(comboCityStateZip.Text) && String.IsNullOrEmpty(reasonForCall.Text) && String.IsNullOrEmpty(repEmail.Text) && String.IsNullOrEmpty(notesParagraph.Text))
-            {
-                ClearCallerData();
-                ClearContactTabsAndNotes();
-                SetContactName();
-
-                if (contactName.Items.Count > 0)
+                if (String.IsNullOrEmpty(contactPhone.Text))
                 {
-                    SetContactEmail();
-                    SetCustomerCode();
-                    SetCompanyName();
-                    SetCityStateZip();
-                    PopulateDataGridViewByPhoneCompanyCity();
+                    return;
                 }
-                if (contactTabControl.TabPages.ContainsKey(contactName.Text) == false)
-                {
-                    contactName.Select();
-                }
-                else
-                {
-                    SelectTabBasedOnSelectedContact();
-                }
-            }
-            else
-            {
-                DialogResult result = MessageBox.Show("Do you want to delete the info currently in form?", "Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
-                if (result == DialogResult.Yes)
+                //if all fields are empty, then auto-populate the fields
+                if (String.IsNullOrEmpty(contactName.Text) && String.IsNullOrEmpty(contactEmail.Text) && String.IsNullOrEmpty(customerCode.Text) && String.IsNullOrEmpty(companyName.Text)
+                    && String.IsNullOrEmpty(comboCityStateZip.Text) && String.IsNullOrEmpty(reasonForCall.Text) && String.IsNullOrEmpty(repEmail.Text) && String.IsNullOrEmpty(notesParagraph.Text))
                 {
                     ClearCallerData();
                     ClearContactTabsAndNotes();
@@ -83,13 +60,45 @@ namespace FarmchemCallLog
                     else
                     {
                         SelectTabBasedOnSelectedContact();
-                        contactName.Select();
                     }
                 }
-                else if (result == DialogResult.No)
+                //if some fields have info, then ask user if they want to overwrite everything
+                else
                 {
-                    return;
+                    DialogResult result = MessageBox.Show("Do you want to delete the info currently in form?", "Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                    if (result == DialogResult.Yes)
+                    {
+                        ClearCallerData();
+                        ClearContactTabsAndNotes();
+                        SetContactName();
+
+                        if (contactName.Items.Count > 0)
+                        {
+                            SetContactEmail();
+                            SetCustomerCode();
+                            SetCompanyName();
+                            SetCityStateZip();
+                            PopulateDataGridViewByPhoneCompanyCity();
+                        }
+                        if (contactTabControl.TabPages.ContainsKey(contactName.Text) == false)
+                        {
+                            contactName.Select();
+                        }
+                        else
+                        {
+                            SelectTabBasedOnSelectedContact();
+                            contactName.Select();
+                        }
+                    }
+                    else if (result == DialogResult.No)
+                    {
+                        return;
+                    }
                 }
+            }
+            catch
+            {
+                MessageBox.Show("Hi guy/gal. You caused error #2 - contact Eric");
             }
         }
 
@@ -119,219 +128,328 @@ namespace FarmchemCallLog
             }
             catch
             {
-                MessageBox.Show("Error populating data with contact name.");
+                MessageBox.Show("Hi guy/gal. You caused error #3 - contact Eric");
             }
         }
 
         public void PopulateDataGridViewByPhoneCompanyCity()
         {
-            callLogGridView.DataSource = bll.GetGridViewData(contactPhone.Text, companyName.Text, companyCity.Text);
+            try
+            {
+                callLogGridView.DataSource = bll.GetGridViewData(contactPhone.Text, companyName.Text, companyCity.Text);
+            }
+            catch
+            {
+                MessageBox.Show("Hi guy/gal. You caused error #4 - contact Eric");
+            }
         }
 
         private void BtnSave_Click(object sender, EventArgs e)
         {
-            if (SaveFormToDatabase() != 0)
+            try
             {
-                MessageBox.Show("Saved call");
+                if (SaveFormToDatabase() != 0)
+                {
+                    MessageBox.Show("Saved call");
+                }
+                else
+                {
+                    MessageBox.Show("Did not save call");
+                }
+                PopulateDataGridViewByPhoneCompanyCity();
             }
-            else
+            catch
             {
-                MessageBox.Show("Did not save call");
+                MessageBox.Show("Hi guy/gal. You caused error #5 - contact Eric");
             }
-            PopulateDataGridViewByPhoneCompanyCity();
         }
 
         private void BtnUpdate_Click(object sender, EventArgs e)
         {
-            if (UpdateFormInDatabase() != 0)
+            try
             {
-                MessageBox.Show("Record Updated");
+                if (UpdateFormInDatabase() != 0)
+                {
+                    MessageBox.Show("Record Updated");
+                }
+                else
+                {
+                    MessageBox.Show("Did not update form");
+                }
+                PopulateDataGridViewByPhoneCompanyCity();
             }
-            else
+            catch
             {
-                MessageBox.Show("Did not update form");
+                MessageBox.Show("Hi guy/gal. You caused error #6 - contact Eric");
             }
-            PopulateDataGridViewByPhoneCompanyCity();
         }
 
         public void CreateBusinessNotes()
         {
-            var textbox = new RichTextBox() { Height = 166, Width = 366 };
-            textbox.Text = bll.GetBusinessNotes(contactPhone.Text, customerCode.Text);
-            businessTabControl.TabPages[0].Controls.Add(textbox);
+            try
+            {
+                var textbox = new RichTextBox() { Height = 166, Width = 366 };
+                textbox.Text = bll.GetBusinessNotes(contactPhone.Text, customerCode.Text);
+                businessTabControl.TabPages[0].Controls.Add(textbox);
+            }
+            catch
+            {
+                MessageBox.Show("Hi guy/gal. You caused error #7 - contact Eric");
+            }
         }
 
         private void SetContactName()
         {
-            contactName.Text = "";
-            contactName.Items.Clear();
-            var list = bll.GetNameList(contactPhone.Text);
-            if (list.Length == 1 && list[0] == "" || list.Length == 0)
+            try
             {
-                return;
+                contactName.Text = "";
+                contactName.Items.Clear();
+                var list = bll.GetNameList(contactPhone.Text);
+                if (list.Length == 1 && list[0] == "" || list.Length == 0)
+                {
+                    return;
+                }
+                else
+                {
+                    contactName.Items.AddRange(list);
+                    contactName.Text = contactName.Items[0].ToString();
+                    CreateContactsAndNotesTabs(list);
+                }
             }
-            else
+            catch
             {
-                contactName.Items.AddRange(list);
-                contactName.Text = contactName.Items[0].ToString();
-                CreateContactsAndNotesTabs(list);
+                MessageBox.Show("Hi guy/gal. You caused error #8 - contact Eric");
             }
-
         }
 
 
         public void CreateContactsAndNotesTabs(string[] list)
         {
-            ClearContactTabsAndNotes();
-
-            if (list.Length > 0)
+            try
             {
-                foreach (var p in list)
+                ClearContactTabsAndNotes();
+
+                if (list.Length > 0)
                 {
-                    var textbox = new RichTextBox() { Height = 166, Width = 366 };
-                    textbox.Text = bll.GetNameNotes(contactPhone.Text, p.ToString());
-                    var newTab = new TabPage(p.ToString());
-                    contactTabControl.TabPages.Add(newTab);
-                    newTab.Name = p.ToString();
-                    newTab.Controls.Add(textbox);
+                    foreach (var p in list)
+                    {
+                        var textbox = new RichTextBox() { Height = 166, Width = 366 };
+                        textbox.Text = bll.GetNameNotes(contactPhone.Text, p.ToString());
+                        var newTab = new TabPage(p.ToString());
+                        contactTabControl.TabPages.Add(newTab);
+                        newTab.Name = p.ToString();
+                        newTab.Controls.Add(textbox);
+                    }
                 }
+                SelectTabBasedOnSelectedContact();
+                contactName.Select();
             }
-            SelectTabBasedOnSelectedContact();
-            contactName.Select();
+            catch
+            {
+                MessageBox.Show("Hi guy/gal. You caused error #9 - contact Eric");
+            }
         }
 
         public void ClearContactTabsAndNotes()
         {
-            //contactTabControl.TabPages.Clear();
-            //clear the controls from each tab page
-            for (int i = 0; i < contactTabControl.TabPages.Count; i++)
+            try
             {
-                if (contactTabControl.TabPages[i].Controls.Count > 0)
+                //contactTabControl.TabPages.Clear();
+                //clear the controls from each tab page
+                for (int i = 0; i < contactTabControl.TabPages.Count; i++)
                 {
-                    contactTabControl.TabPages[0].Controls.Clear();
+                    if (contactTabControl.TabPages[i].Controls.Count > 0)
+                    {
+                        contactTabControl.TabPages[0].Controls.Clear();
+                    }
+                }
+                while (contactTabControl.TabCount > 1)
+                {
+                    contactTabControl.TabPages.RemoveAt(1);
                 }
             }
-            while (contactTabControl.TabCount > 1)
+            catch
             {
-                contactTabControl.TabPages.RemoveAt(1);
+                MessageBox.Show("Hi guy/gal. You caused error #10 - contact Eric");
             }
-
         }
 
         private void ClearCompanyNotesText()
         {
-            businessTabControl.TabPages[0].Controls.Clear();
+            try
+            {
+                businessTabControl.TabPages[0].Controls.Clear();
+            }
+            catch
+            {
+                MessageBox.Show("Hi guy/gal. You caused error #11 - contact Eric");
+            }
         }
 
         private void SetContactEmail()
         {
-            contactEmail.Text = "";
-            contactEmail.Items.Clear();
-            contactEmail.Items.AddRange(bll.GetCustomerEmail(contactPhone.Text, contactName.Text));
-            contactEmail.Text = contactEmail.Items[0].ToString();
+            try
+            {
+                contactEmail.Text = "";
+                contactEmail.Items.Clear();
+                contactEmail.Items.AddRange(bll.GetCustomerEmail(contactPhone.Text, contactName.Text));
+                contactEmail.Text = contactEmail.Items[0].ToString();
+            }
+            catch
+            {
+                MessageBox.Show("Hi guy/gal. You caused error #12 - contact Eric");
+            }
         }
 
         private void SetCustomerCode()
         {
-            customerCode.Text = "";
-            customerCode.Items.Clear();
-            customerCode.Items.AddRange(bll.GetCustomerCode(contactPhone.Text, contactName.Text));
-            customerCode.Text = customerCode.Items[0].ToString();
-            CreateBusinessNotes();
+            try
+            {
+                customerCode.Text = "";
+                customerCode.Items.Clear();
+                customerCode.Items.AddRange(bll.GetCustomerCode(contactPhone.Text, contactName.Text));
+                customerCode.Text = customerCode.Items[0].ToString();
+                CreateBusinessNotes();
+            }
+            catch
+            {
+                MessageBox.Show("Hi guy/gal. You caused error #13 - contact Eric");
+            }
         }
 
         private void SetCompanyName()
         {
-            companyName.Text = "";
-            companyName.Items.Clear();
-            companyName.Items.AddRange(bll.GetCompanyName(customerCode.Text));
-            companyName.Text = companyName.Items[0].ToString();
-        }
+            try
+            {
+                companyName.Text = "";
+                companyName.Items.Clear();
+                companyName.Items.AddRange(bll.GetCompanyName(customerCode.Text));
+                companyName.Text = companyName.Items[0].ToString();
+            }
+            catch
+            {
+                MessageBox.Show("Hi guy/gal. You caused error #14 - contact Eric");
+            }
 
+        }
 
         private void SetCityStateZip()
         {
-            comboCityStateZip.Text = "";
-            comboCityStateZip.Items.Clear();
-            comboCityStateZip.Items.AddRange(bll.GetCompanyCityStateZip(contactPhone.Text, customerCode.Text));
-            comboCityStateZip.Text = comboCityStateZip.Items[0].ToString();
+            try
+            {
+                comboCityStateZip.Text = "";
+                comboCityStateZip.Items.Clear();
+                comboCityStateZip.Items.AddRange(bll.GetCompanyCityStateZip(customerCode.Text));
+                comboCityStateZip.Text = comboCityStateZip.Items[0].ToString();
+            }
+            catch
+            {
+                MessageBox.Show("Hi guy/gal. You caused error #15 - contact Eric");
+            }
         }
 
         public int SaveFormToDatabase()
         {
-            string contactNotes;
-            string companyNotes = "";
-            if (businessTabControl.TabPages[0].Controls[0].Text != "")
+            try
             {
-                companyNotes = businessTabControl.TabPages[0].Controls[0].Text;
-            }
-            if (contactTabControl.TabPages.Count > 1)
-            {
-                try
-                {
-                    contactNotes = contactTabControl.TabPages[contactName.Text].Controls[0].Text;
-                }
-                catch { contactNotes = ""; }
-            }
-            else
-            {
-                contactNotes = "";
-            }
-            TurnValidationOnForAll();
-            if (this.ValidateChildren())
-            {
-                TurnValidationOffForAll();
-                return bll.SaveToDatabase(contactPhone.Text, contactName.Text, contactEmail.Text, customerCode.Text, companyName.Text, companyCity.Text, companyState.Text, companyZip.Text, reasonForCall.Text, notesParagraph.Text, callDate.Text, repEmail.Text, contactNotes, companyNotes);
 
+                string contactNotes;
+                string companyNotes = "";
+                if (businessTabControl.TabPages[0].Controls[0].Text != "")
+                {
+                    companyNotes = businessTabControl.TabPages[0].Controls[0].Text;
+                }
+                if (contactTabControl.TabPages.Count > 1)
+                {
+                    try
+                    {
+                        contactNotes = contactTabControl.TabPages[contactName.Text].Controls[0].Text;
+                    }
+                    catch { contactNotes = ""; }
+                }
+                else
+                {
+                    contactNotes = "";
+                }
+                TurnValidationOnForAll();
+                if (this.ValidateChildren())
+                {
+                    TurnValidationOffForAll();
+                    return bll.SaveToDatabase(contactPhone.Text, contactName.Text, contactEmail.Text, customerCode.Text, companyName.Text, companyCity.Text, companyState.Text, companyZip.Text, reasonForCall.Text, notesParagraph.Text, callDate.Text, repEmail.Text, contactNotes, companyNotes);
+
+                }
+                else
+                {
+                    TurnValidationOffForAll();
+                    return 0;
+                }
             }
-            else
+            //returning 0 will make a pop-up stating the call didnt' save
+            catch
             {
-                TurnValidationOffForAll();
+                MessageBox.Show("Hi guy/gal. You caused error #16 - contact Eric");
                 return 0;
             }
-
         }
 
         public int UpdateFormInDatabase()
         {
-            string contactNotes;
-            string companyNotes = "";
-            if (businessTabControl.TabPages[0].Controls[0].Text != "")
+            try
             {
-                companyNotes = businessTabControl.TabPages[0].Controls[0].Text;
-            }
-            if (contactTabControl.TabPages.Count > 1)
-            {
-                try
+                string contactNotes;
+                string companyNotes = "";
+                if (businessTabControl.TabPages[0].Controls[0].Text != "")
                 {
-                    contactNotes = contactTabControl.TabPages[contactName.Text].Controls[0].Text;
+                    companyNotes = businessTabControl.TabPages[0].Controls[0].Text;
                 }
-                catch { contactNotes = ""; }
+                if (contactTabControl.TabPages.Count > 1)
+                {
+                    try
+                    {
+                        contactNotes = contactTabControl.TabPages[contactName.Text].Controls[0].Text;
+                    }
+                    catch { contactNotes = ""; }
+                }
+                else
+                {
+                    contactNotes = "";
+                }
+                return bll.UpdateCallLogRecord(Convert.ToInt32(callRecord.Text), contactPhone.Text, contactName.Text, contactEmail.Text, customerCode.Text, companyName.Text, companyCity.Text, companyState.Text, companyZip.Text, reasonForCall.Text, notesParagraph.Text, callDate.Text, repEmail.Text, contactNotes, companyNotes);
             }
-            else
+            //returning 0 will cause the pop-up that the form didn't update
+            catch
             {
-                contactNotes = "";
+                MessageBox.Show("Hi guy/gal. You caused error #17 - contact Eric");
+                return 0;
             }
-            return bll.UpdateCallLogRecord(Convert.ToInt32(callRecord.Text), contactPhone.Text, contactName.Text, contactEmail.Text, customerCode.Text, companyName.Text, companyCity.Text, companyState.Text, companyZip.Text, reasonForCall.Text, notesParagraph.Text, callDate.Text, repEmail.Text, contactNotes, companyNotes);
         }
-
-
-
-        //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
         private void TurnValidationOnForAll()
         {
-            foreach (Control con in this.Controls)
+            try
             {
-                con.CausesValidation = true;
+                foreach (Control con in this.Controls)
+                {
+                    con.CausesValidation = true;
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Hi guy/gal. You caused error #18 - contact Eric");
             }
         }
 
         private void TurnValidationOffForAll()
         {
-            foreach (Control con in this.Controls)
+            try { 
+                foreach (Control con in this.Controls)
+                {
+                    con.CausesValidation = false;
+                }
+            }
+            catch
             {
-                con.CausesValidation = false;
+                MessageBox.Show("Hi guy/gal. You caused error #19 - contact Eric");
             }
         }
 
@@ -355,22 +473,38 @@ namespace FarmchemCallLog
         {
             try
             {
-                contactPhone.Text = "";
-                ClearCallerData();
-                ClearContactTabsAndNotes();
-                ClearCompanyNotesText();
-                reasonForCall.Text = "";
-                notesParagraph.Text = "";
-                outsideRep.Text = "";
-                completedAnswer.Checked = false;
-                contactPhone.Select();
+                DialogResult result = MessageBox.Show("Do you want to delete the info currently in form?", "Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                if (result == DialogResult.Yes)
+                {
+                    try
+                    {
+                        contactPhone.Text = "";
+                        ClearCallerData();
+                        ClearContactTabsAndNotes();
+                        ClearCompanyNotesText();
+                        reasonForCall.Text = "";
+                        notesParagraph.Text = "";
+                        outsideRep.Text = "";
+                        completedAnswer.Checked = false;
+                        contactPhone.Select();
+                    }
+                    catch
+                    {
+
+                        throw;
+                    }
+                }
+                else
+                {
+                    return;
+                }
             }
             catch
             {
-
-                throw;
+                MessageBox.Show("Hi guy/gal. You caused error #20 - contact Eric");
             }
         }
+
 
         //clears the contact name - company zip fields
         private void ClearCallerData()
@@ -393,12 +527,13 @@ namespace FarmchemCallLog
                 completedAnswer.Checked = false;
                 repEmail.Text = "";
                 reasonForCall.Text = "";
+                callRecord.Text = "";
                 ClearCompanyNotesText();
                 CreateBusinessNotes();
             }
             catch
             {
-                MessageBox.Show("Hi guy/gal, there was an issue trying to ClearCallerData(). Please snip the screen and send to IT/Eric.");
+                MessageBox.Show("Hi guy/gal. You caused error #21 - contact Eric");
             }
         }
 
@@ -446,7 +581,7 @@ namespace FarmchemCallLog
             }
             catch
             {
-                throw;
+                MessageBox.Show("Hi guy/gal. You caused error 22 - contact Eric");
             }
         }
 
@@ -454,7 +589,14 @@ namespace FarmchemCallLog
 
         private static bool IsPhoneNumber(string number)
         {
-            return Regex.Match(number, @"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$").Success;
+            try
+            {
+                return Regex.Match(number, @"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$").Success;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private bool IsValidEmail(string email)
@@ -474,120 +616,191 @@ namespace FarmchemCallLog
 
         private void ContactPhone_Validating(object sender, CancelEventArgs e)
         {
-            if (!IsPhoneNumber(contactPhone.Text))
+            try
             {
-                MessageBox.Show("Please enter a valid phone number");
-                e.Cancel = true;
+                if (!IsPhoneNumber(contactPhone.Text))
+                {
+                    MessageBox.Show("Please enter a valid phone number");
+                    e.Cancel = true;
+                }
+                if (contactPhone.TextLength > 20)
+                {
+                    MessageBox.Show("Contact phone is too long - please re-enter.");
+                    e.Cancel = true;
+                }
             }
-            if (contactPhone.TextLength > 20)
+            catch
             {
-                MessageBox.Show("Contact phone is too long - please re-enter.");
-                e.Cancel = true;
+                MessageBox.Show("Hi guy/gal. You caused error #23 - contact Eric");
             }
         }
 
 
         private void ContactName_Validating(object sender, CancelEventArgs e)
         {
-            if (contactName.Text.Length > 50)
+            try
             {
-                MessageBox.Show("Contact Name is too long");
-                e.Cancel = true;
+                if (contactName.Text.Length > 50)
+                {
+                    MessageBox.Show("Contact Name is too long");
+                    e.Cancel = true;
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Hi guy/gal. You caused error #24 - contact Eric");
             }
         }
 
         private void ContactEmail_Validating(object sender, CancelEventArgs e)
         {
-            if (contactEmail.Text.Length == 0)
+            try
             {
-                return;
-            }
-            if (!IsValidEmail(contactEmail.Text))
-            {
-                DialogResult result = MessageBox.Show("It appears your email may not be formatted correctly, would you like to save anyway?", "Warning!", MessageBoxButtons.YesNo);
-                if (result == DialogResult.Yes)
+                if (contactEmail.Text.Length == 0)
                 {
-                    e.Cancel = false;
-
+                    return;
                 }
-                else if (result == DialogResult.No)
+                if (!IsValidEmail(contactEmail.Text))
                 {
+                    DialogResult result = MessageBox.Show("It appears your email may not be formatted correctly, would you like to save anyway?", "Warning!", MessageBoxButtons.YesNo);
+                    if (result == DialogResult.Yes)
+                    {
+                        e.Cancel = false;
+
+                    }
+                    else if (result == DialogResult.No)
+                    {
+                        e.Cancel = true;
+                    }
+                }
+                if (contactEmail.Text.Length > 50)
+                {
+                    MessageBox.Show("Email is too long - please re-enter.");
                     e.Cancel = true;
                 }
             }
-            if (contactEmail.Text.Length > 50)
+            catch
             {
-                MessageBox.Show("Email is too long - please re-enter.");
-                e.Cancel = true;
+                MessageBox.Show("Hi guy/gal. You caused error #25 - contact Eric");
             }
         }
 
         private void AddAddress_Click(object sender, EventArgs e)
         {
-            using (addAddress = new AddAddressForm())
+            try
             {
-                if (addAddress.ShowDialog() == DialogResult.OK)
+                using (addAddress = new AddAddressForm())
                 {
-                    companyCity.Text = addAddress.addCompanyCity.Text.Replace(",", "");
-                    companyState.Text = addAddress.addCompanyState.Text.Replace(",", "");
-                    companyZip.Text = addAddress.addCompanyZip.Text.Replace(",", "");
+                    if (addAddress.ShowDialog() == DialogResult.OK)
+                    {
+                        companyCity.Text = addAddress.addCompanyCity.Text.Replace(",", "");
+                        companyState.Text = addAddress.addCompanyState.Text.Replace(",", "");
+                        companyZip.Text = addAddress.addCompanyZip.Text.Replace(",", "");
+                    }
                 }
+                comboCityStateZip.Items.Add($"{ companyCity.Text}, {companyState.Text}, {companyZip.Text}");
+                comboCityStateZip.SelectedItem = comboCityStateZip.Items[comboCityStateZip.Items.Count - 1];
             }
-            comboCityStateZip.Items.Add($"{ companyCity.Text}, {companyState.Text}, {companyZip.Text}");
-            comboCityStateZip.SelectedItem = comboCityStateZip.Items[comboCityStateZip.Items.Count - 1];
+            catch
+            {
+                MessageBox.Show("Hi guy/gal. You caused error #26 - contact Eric");
+            }
         }
 
         private void CustomerCode_Validating(object sender, CancelEventArgs e)
         {
-            if (customerCode.Text.Length > 10)
+            try
             {
-                MessageBox.Show("Customer Code is too long - please re-enter.");
-                e.Cancel = true;
+                if (customerCode.Text.Length > 10)
+                {
+                    MessageBox.Show("Customer Code is too long - please re-enter.");
+                    e.Cancel = true;
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Hi guy/gal. You caused error #27 - contact Eric");
             }
         }
 
         private void CompanyCity_Validating(object sender, CancelEventArgs e)
         {
-            if (companyCity.Text.Length > 50)
+            try
             {
-                MessageBox.Show("Company City is too long - please Add a new address.");
-                e.Cancel = true;
+                if (companyCity.Text.Length > 50)
+                {
+                    MessageBox.Show("Company City is too long - please Add a new address.");
+                    e.Cancel = true;
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Hi guy/gal. You caused error #28 - contact Eric");
             }
         }
 
         private void CompanyState_Validating_1(object sender, CancelEventArgs e)
         {
-            if (companyState.Text.Length > 15)
+            try
             {
-                MessageBox.Show("Company State is too long - please Add a new address.");
-                e.Cancel = true;
+                if (companyState.Text.Length > 15)
+                {
+                    MessageBox.Show("Company State is too long - please Add a new address.");
+                    e.Cancel = true;
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Hi guy/gal. You caused error #29 - contact Eric");
             }
         }
 
         private void CompanyState_Validating(object sender, CancelEventArgs e)
         {
-            if (companyState.Text.Length > 10)
+
+            try
             {
-                MessageBox.Show("State is too long");
-                e.Cancel = true;
+                if (companyState.Text.Length > 10)
+                {
+                    MessageBox.Show("State is too long");
+                    e.Cancel = true;
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Hi guy/gal. You caused error #30 - contact Eric");
             }
         }
 
         private void CompanyZip_Validating(object sender, CancelEventArgs e)
         {
-            if (companyZip.Text.Length > 10)
+            try
             {
-                MessageBox.Show("Company Zip code is too long - please Add a new address.");
-                e.Cancel = true;
+                if (companyZip.Text.Length > 10)
+                {
+                    MessageBox.Show("Company Zip code is too long - please Add a new address.");
+                    e.Cancel = true;
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Hi guy/gal. You caused error #31 - contact Eric");
             }
         }
 
         private void ReasonForCall_Validating(object sender, CancelEventArgs e)
         {
-            if (reasonForCall.Text.Length > 50)
+            try
             {
-                MessageBox.Show("Reason for call is too long - please be more succinct.");
-                e.Cancel = true;
+                if (reasonForCall.Text.Length > 50)
+                {
+                    MessageBox.Show("Reason for call is too long - please be more succinct.");
+                    e.Cancel = true;
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Hi guy/gal. You caused error #32 - contact Eric");
             }
         }
 
@@ -596,17 +809,23 @@ namespace FarmchemCallLog
         //all commas removed from add address
         private void ComboCityStateZip_SelectedIndexChanged(object sender, EventArgs e)
         {
-            companyCity.Text = "";
-            companyState.Text = "";
-            companyZip.Text = "";
-            string[] line = comboCityStateZip.Text.Split(',');
-            if (line.Length == 3)
+            try
             {
-                companyCity.Text = line[0].Trim();
-                companyState.Text = line[1].Trim();
-                companyZip.Text = line[2].Trim();
+                companyCity.Text = "";
+                companyState.Text = "";
+                companyZip.Text = "";
+                string[] line = comboCityStateZip.Text.Split(',');
+                if (line.Length == 3)
+                {
+                    companyCity.Text = line[0].Trim();
+                    companyState.Text = line[1].Trim();
+                    companyZip.Text = line[2].Trim();
+                }
             }
-
+            catch
+            {
+                MessageBox.Show("Hi guy/gal. You caused error #33 - contact Eric");
+            }
         }
 
         private void SelectTabBasedOnSelectedContact()
@@ -624,81 +843,140 @@ namespace FarmchemCallLog
             }
             catch
             {
-
+                MessageBox.Show("Hi guy/gal. You caused error #34 - contact Eric");
             }
-            
+
         }
 
         private void BtnDelete_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show("Do you want to delete the currently loaded call?", "Warning!", MessageBoxButtons.YesNo);
-            if (result == DialogResult.Yes)
+            try
             {
+                DialogResult result = MessageBox.Show("Do you want to delete the currently loaded call?", "Warning!", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
 
+                }
+                else if (result == DialogResult.No)
+                {
+                    return;
+                }
             }
-            else if (result == DialogResult.No)
+            catch
             {
-                return;
+                MessageBox.Show("Hi guy/gal. You caused error #35 - contact Eric");
             }
         }
 
         private void LoadCallBasedOnGrid_Click(object sender, EventArgs e)
         {
-            if(callLogGridView.SelectedCells.Count == 0 || Convert.ToInt32(callLogGridView.Rows[callLogGridView.CurrentRow.Index].Cells[0].Value.ToString()) < 1)
+            try
             {
-                MessageBox.Show("Guy/gal, please select a call from the below grid and try again.");
-                return;
+                if (callLogGridView.SelectedCells.Count == 0 || Convert.ToInt32(callLogGridView.Rows[callLogGridView.CurrentRow.Index].Cells[0].Value.ToString()) < 1)
+                {
+                    MessageBox.Show("Guy/gal, please select a call from the below grid and try again.");
+                    return;
+                }
+                DialogResult result = MessageBox.Show("Do you want to overwrite information in the form currently?", "Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                if (result == DialogResult.Yes)
+                {
+                    var recordNum = callLogGridView.Rows[callLogGridView.CurrentRow.Index].Cells[0].Value.ToString();
+                    PopulateCallLogFieldsByDataTable(bll.GetDataTableOfCallLogByRecordNumber(recordNum));
+                    callRecord.Text = recordNum;
+                    SelectTabBasedOnSelectedContact();
+                }
+                else if (result == DialogResult.No)
+                {
+                    return;
+                }
             }
-            DialogResult result = MessageBox.Show("Do you want to overwrite information in the form currently?", "Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
-            if (result == DialogResult.Yes)
+            catch
             {
-                var recordNum = callLogGridView.Rows[callLogGridView.CurrentRow.Index].Cells[0].Value.ToString();
-                PopulateCallLogFieldsByDataTable(bll.GetDataTableOfCallLogByRecordNumber(recordNum));
-                callRecord.Text = recordNum;
-                SelectTabBasedOnSelectedContact();
-            }
-            else if (result == DialogResult.No)
-            {
-                return;
+                MessageBox.Show("Hi guy/gal. You caused error #36 - contact Eric");
             }
         }
 
         private void PopulateCallLogFieldsByDataTable(DataTable table)
         {
-            contactPhone.Text = table.Rows[0]["contactPhone"].ToString();
-            contactName.Text = table.Rows[0]["contactName"].ToString();
-            contactEmail.Text = table.Rows[0]["contactEmail"].ToString();
-            customerCode.Text = table.Rows[0]["customerCode"].ToString();
-            companyName.Text = table.Rows[0]["companyName"].ToString();
-            companyCity.Text = table.Rows[0]["companyCity"].ToString();
-            companyState.Text = table.Rows[0]["companyState"].ToString();
-            companyZip.Text = table.Rows[0]["companyZip"].ToString();
-            reasonForCall.Text = table.Rows[0]["reasonForCall"].ToString();
-            notesParagraph.Text = table.Rows[0]["notesParagraph"].ToString();
-            if(table.Rows[0]["customerCode"].ToString() == "yes")
+            try
             {
-                completedAnswer.Checked = true;
+                contactPhone.Text = table.Rows[0]["contactPhone"].ToString();
+                contactName.Text = table.Rows[0]["contactName"].ToString();
+                contactEmail.Text = table.Rows[0]["contactEmail"].ToString();
+                customerCode.Text = table.Rows[0]["customerCode"].ToString();
+                companyName.Text = table.Rows[0]["companyName"].ToString();
+                companyCity.Text = table.Rows[0]["companyCity"].ToString();
+                companyState.Text = table.Rows[0]["companyState"].ToString();
+                companyZip.Text = table.Rows[0]["companyZip"].ToString();
+                reasonForCall.Text = table.Rows[0]["reasonForCall"].ToString();
+                notesParagraph.Text = table.Rows[0]["notesParagraph"].ToString();
+                if (table.Rows[0]["customerCode"].ToString() == "yes")
+                {
+                    completedAnswer.Checked = true;
+                }
+                outsideRep.Text = table.Rows[0]["outsideRep"].ToString();
+                CreateContactsAndNotesTabs(bll.GetNameList(contactPhone.Text));
+                CreateBusinessNotes();
             }
-            outsideRep.Text = table.Rows[0]["outsideRep"].ToString();
-            CreateContactsAndNotesTabs(bll.GetNameList(contactPhone.Text));
-            CreateBusinessNotes();
+            catch
+            {
+                MessageBox.Show("Hi guy/gal. You caused error #37 - contact Eric");
+            }
         }
 
         private void SearchButton_Click(object sender, EventArgs e)
         {
-            using (searchForm = new SearchForm())
+            try
             {
-                if (searchForm.ShowDialog() == DialogResult.OK)
+                using (searchForm = new SearchForm())
                 {
-                    callLogGridView.DataSource = bll.GetCallLogDataTableBySearchFromDB(searchForm.SearchValue);
+                    if (searchForm.ShowDialog() == DialogResult.OK)
+                    {
+                        callLogGridView.DataSource = bll.GetCallLogDataTableBySearchFromDB(searchForm.SearchValue);
+                    }
                 }
+                callLogGridView.Select();
+            }
+            catch
+            {
+                MessageBox.Show("Hi guy/gal. You caused error #38 - contact Eric");
             }
         }
 
         private void ContactName_SelectedIndexChanged(object sender, EventArgs e)
         {
-            SelectTabBasedOnSelectedContact();
-            contactName.Select();
+            try
+            {
+                SelectTabBasedOnSelectedContact();
+                contactName.Select();
+            }
+            catch
+            {
+                MessageBox.Show("Hi guy/gal. You caused error #39 - contact Eric");
+            }
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            try
+            {
+                if (e.KeyCode == Keys.F2)
+                {
+                    BtnNewCall_Click(sender, e);
+                }
+                if (e.KeyCode == Keys.F4)
+                {
+                    BtnSave_Click(sender, e);
+                }
+                if (e.KeyCode == Keys.F5)
+                {
+                    SearchButton_Click(sender, e);
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Hi guy/gal. You caused error #40 - contact Eric");
+            }
         }
     }
 }
