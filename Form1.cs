@@ -2,16 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Net;
-using System.Net.Mail;
-using BLL;
 using System.Text.RegularExpressions;
 using Outlook = Microsoft.Office.Interop.Outlook;
+using BLL;
 
 namespace FarmchemCallLog
 {
@@ -118,8 +112,6 @@ namespace FarmchemCallLog
                     createdNewTab = true;
                 }
                 SetContactEmail();
-                SetCompanyName();
-                SetCityStateZip();
                 SelectTabBasedOnSelectedContact();
                 if(createdNewTab)
                 {

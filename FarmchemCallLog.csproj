@@ -51,6 +51,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BLL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>BLL\obj\Debug\netstandard2.0\BLL.dll</HintPath>
+    </Reference>
     <Reference Include="FluentFTP, Version=27.0.2.0, Culture=neutral, PublicKeyToken=f4af092b1d8df44f, processorArchitecture=MSIL">
       <HintPath>packages\FluentFTP.27.0.2\lib\net45\FluentFTP.dll</HintPath>
     </Reference>
@@ -110,6 +114,8 @@
     <Compile Include="AddAddressForm.Designer.cs">
       <DependentUpon>AddAddressForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="BusinessLogicLayer.cs" />
+    <Compile Include="DataAccessLayer.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -182,16 +188,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BLL\BLL.csproj">
-      <Project>{56ef70ea-1fb5-4c6f-8196-e1eae5246183}</Project>
-      <Name>BLL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DAL\DAL.csproj">
-      <Project>{b23cebec-d887-4b4d-82e1-4a86b35be3d0}</Project>
-      <Name>DAL</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
