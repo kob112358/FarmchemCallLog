@@ -10,3 +10,15 @@ C:\Users\Kob\source\repos\BLL\obj\Debug\netstandard2.0\BLL.csprojAssemblyReferen
 C:\Users\Kob\source\repos\BLL\obj\Debug\netstandard2.0\BLL.csproj.CopyComplete
 C:\Users\Kob\source\repos\BLL\obj\Debug\netstandard2.0\BLL.dll
 C:\Users\Kob\source\repos\BLL\obj\Debug\netstandard2.0\BLL.pdb
+C:\Users\Kob\source\repos\FarmchemCallLog\BLL\netstandard2.0\DAL.dll
+C:\Users\Kob\source\repos\FarmchemCallLog\BLL\netstandard2.0\DAL.pdb
+C:\Users\Kob\source\repos\FarmchemCallLog\BLL\obj\Debug\netstandard2.0\BLL.csproj.CoreCompileInputs.cache
+C:\Users\Kob\source\repos\FarmchemCallLog\BLL\obj\Debug\netstandard2.0\BLL.AssemblyInfoInputs.cache
+C:\Users\Kob\source\repos\FarmchemCallLog\BLL\obj\Debug\netstandard2.0\BLL.AssemblyInfo.cs
+C:\Users\Kob\source\repos\FarmchemCallLog\BLL\obj\Debug\netstandard2.0\BLL.csproj.CopyComplete
+C:\Users\Kob\source\repos\FarmchemCallLog\BLL\obj\Debug\netstandard2.0\BLL.dll
+C:\Users\Kob\source\repos\FarmchemCallLog\BLL\obj\Debug\netstandard2.0\BLL.pdb
+C:\Users\Kob\source\repos\FarmchemCallLog\BLL\netstandard2.0\BLL.deps.json
+C:\Users\Kob\source\repos\FarmchemCallLog\BLL\netstandard2.0\BLL.dll
+C:\Users\Kob\source\repos\FarmchemCallLog\BLL\netstandard2.0\BLL.pdb
+C:\Users\Kob\source\repos\FarmchemCallLog\BLL\obj\Debug\netstandard2.0\BLL.csprojAssemblyReference.cache

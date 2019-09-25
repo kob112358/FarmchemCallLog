@@ -7,7 +7,7 @@ namespace DAL
 {
     public class DataAccessLayer
     {
-        private SqlConnection _con = new SqlConnection("data source=kobpc\\sqlexpress;initial catalog=modifycalllog;integrated security=true;Connect Timeout=60");
+        private readonly SqlConnection _con = new SqlConnection("data source=kobpc\\sqlexpress;initial catalog=modifycalllog;integrated security=true;Connect Timeout=60");
         private DataTable _dt;
 
 
@@ -15,7 +15,9 @@ namespace DAL
         {
             var adapter = new SqlDataAdapter("SELECT contactName, COUNT(contactName) AS MOST_FREQUENT FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' GROUP BY contactName ORDER BY MOST_FREQUENT DESC", _con);
             adapter.SelectCommand.Parameters.AddWithValue("contactPhone", phone);
-            return GenerateListForComboboxFromDB(adapter, "contactName");
+            var returnList = GenerateListForComboboxFromDB(adapter, "contactName");
+            adapter.Dispose();
+            return returnList;
         }
 
         public List<string> PopulateNameNotes(string phone, string name)
@@ -23,7 +25,9 @@ namespace DAL
             var adapter = new SqlDataAdapter("SELECT customerNotes FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' AND contactName LIKE '%' + @contactName + '%'", _con);
             adapter.SelectCommand.Parameters.AddWithValue("contactPhone", phone);
             adapter.SelectCommand.Parameters.AddWithValue("contactName", name);
-            return GenerateListForComboboxFromDB(adapter, "customerNotes");
+            var returnList = GenerateListForComboboxFromDB(adapter, "customerNotes");
+            adapter.Dispose();
+            return returnList;
         }
 
         public List<string> PopulateBusinessNotes(string phone, string code)
@@ -31,7 +35,9 @@ namespace DAL
             var adapter = new SqlDataAdapter("SELECT businessNotes FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' AND customerCode LIKE '%' + @customerCode + '%'", _con);
             adapter.SelectCommand.Parameters.AddWithValue("contactPhone", phone);
             adapter.SelectCommand.Parameters.AddWithValue("customerCode", code);
-            return GenerateListForComboboxFromDB(adapter, "businessNotes");
+            var returnList = GenerateListForComboboxFromDB(adapter, "businessNotes");
+            adapter.Dispose();
+            return returnList;
         }
 
 
@@ -40,7 +46,9 @@ namespace DAL
             var adapter = new SqlDataAdapter("SELECT contactEmail, COUNT(contactEmail) AS MOST_FREQUENT FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' AND contactName LIKE '%' + @contactName + '%' GROUP BY contactEmail ORDER BY MOST_FREQUENT DESC", _con);
             adapter.SelectCommand.Parameters.AddWithValue("contactPhone", phone);
             adapter.SelectCommand.Parameters.AddWithValue("contactName", name);
-            return GenerateListForComboboxFromDB(adapter, "contactEmail");
+            var returnList = GenerateListForComboboxFromDB(adapter, "contactEmail");
+            adapter.Dispose();
+            return returnList;
         }
 
         public List<string> PopulateCustomerCode(string phone, string name)
@@ -48,21 +56,27 @@ namespace DAL
             var adapter = new SqlDataAdapter("SELECT customerCode, COUNT(customerCode) AS MOST_FREQUENT FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' AND contactName LIKE '%' + @contactName + '%' GROUP BY customerCode ORDER BY MOST_FREQUENT DESC", _con);
             adapter.SelectCommand.Parameters.AddWithValue("contactPhone", phone);
             adapter.SelectCommand.Parameters.AddWithValue("contactName", name);
-            return GenerateListForComboboxFromDB(adapter, "customerCode");
+            var returnList = GenerateListForComboboxFromDB(adapter, "customerCode");
+            adapter.Dispose();
+            return returnList;
         }
 
         public List<string> PopulateCompanyName(string code)
         {
             var adapter = new SqlDataAdapter("SELECT TOP (1) companyName FROM modify_data_calllog WHERE customerCode LIKE '%' + @customerCode + '%' GROUP BY companyName ORDER BY companyName DESC", _con);
             adapter.SelectCommand.Parameters.AddWithValue("customerCode", code);
-            return GenerateListForComboboxFromDB(adapter, "companyName");
+            var returnList = GenerateListForComboboxFromDB(adapter, "companyName");
+            adapter.Dispose();
+            return returnList;
         }
 
         public List<string> PopulateCompanyCityStateZip(string code)
         {
             var adapter = new SqlDataAdapter("SELECT companyCityStateZip, COUNT(companyCityStateZip) AS MOST_FREQUENT FROM modify_data_calllog WHERE customerCode LIKE '%' + @customerCode + '%' GROUP BY companyCityStatezip ORDER BY MOST_FREQUENT DESC", _con);
             adapter.SelectCommand.Parameters.AddWithValue("customerCode", code);
-            return GenerateListForComboboxFromDB(adapter, "companyCityStateZip");
+            var returnList = GenerateListForComboboxFromDB(adapter, "companyCityStateZip");
+            adapter.Dispose();
+            return returnList;
         }
 
 
@@ -71,7 +85,9 @@ namespace DAL
             var adapter = new SqlDataAdapter("SELECT TOP (3) companyCity FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' AND customerCode LIKE '%' + @customerCode + '%' GROUP BY companyCity ORDER BY COUNT(companyCity) DESC", _con);
             adapter.SelectCommand.Parameters.AddWithValue("customerCode", code);
             adapter.SelectCommand.Parameters.AddWithValue("contactPhone", phone);
-            return GenerateListForComboboxFromDB(adapter, "companyCity")[0];
+            var returnString = GenerateListForComboboxFromDB(adapter, "companyCity")[0];
+            adapter.Dispose();
+            return returnString;
         }
 
         public string PopulateCompanyState(string phone, string code)
@@ -79,7 +95,9 @@ namespace DAL
             var adapter = new SqlDataAdapter("SELECT TOP (3) companyState FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' AND customerCode LIKE '%' + @customerCode + '%' GROUP BY companyState ORDER BY COUNT(companyState) DESC", _con);
             adapter.SelectCommand.Parameters.AddWithValue("customerCode", code);
             adapter.SelectCommand.Parameters.AddWithValue("contactPhone", phone);
-            return GenerateListForComboboxFromDB(adapter, "companyState")[0];
+            var returnString = GenerateListForComboboxFromDB(adapter, "companyState")[0];
+            adapter.Dispose();
+            return returnString;
         }
 
         public string PopulateCompanyZip(string phone, string code)
@@ -87,7 +105,9 @@ namespace DAL
             var adapter = new SqlDataAdapter("SELECT TOP (3) companyZip FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' AND customerCode LIKE '%' + @customerCode + '%' GROUP BY companyZip ORDER BY COUNT(companyZip) DESC", _con);
             adapter.SelectCommand.Parameters.AddWithValue("customerCode", code);
             adapter.SelectCommand.Parameters.AddWithValue("contactPhone", phone);
-            return GenerateListForComboboxFromDB(adapter, "companyZip")[0];
+            var returnString = GenerateListForComboboxFromDB(adapter, "companyZip")[0];
+            adapter.Dispose();
+            return returnString;
         }
 
         public List<string> GenerateListForComboboxFromDB(SqlDataAdapter da, string field)
@@ -123,7 +143,7 @@ namespace DAL
                 adapter.SelectCommand.Parameters.AddWithValue("companyCity", city);
                 _dt = new DataTable();
                 adapter.Fill(_dt);
-                
+                adapter.Dispose();
             }
             catch (Exception)
             {
@@ -167,104 +187,6 @@ namespace DAL
             return thisCmd;
         }
 
-
-
-
-        public int SaveRGAToDatabase(string CF, string rgaDate, string Order_owner, string Order_status, string RGA_Type, string Energy_or_Chem, string Reason_RGA_Open, string Complaint, string vendor_rga,
-string SALES_ORDER, string CUSTOMER, string Notes_and_Activity, string Final_Outcome, string Testing_Notes, string Invoice_Number, string Customer_Number, string Contact_Name, string Contact_Phone,
-string Contact_Email, string Return_Qty_A, string Return_Item_A, string Return_Qty_B, string Return_Item_B,
-string Return_Qty_C, string Return_Item_C, string Return_Qty_D, string Return_Item_D, string Return_Credit_A, string Return_Credit_B, string Return_Credit_C, string Return_Credit_D,
-string Return_Ship_Method, string Replace_Qty_A, string Replace_Qty_B, string Replace_Qty_C, string Replace_Item_A, string Replace_Item_B, string Replace_Item_C, string Replace_SO_A,
-string Replace_SO_B, string Replace_SO_C, string Energy_Price_Level, string Outside_Rep)
-        {
-            try
-            {
-                var cmd = new SqlCommand("insert into RgaDatabase(CF, rgaDate, Order_owner, Order_status, RGA_Type, Energy_or_Chem, Reason_RGA_Open, Complaint, vendor_rga, SALES_ORDER, CUSTOMER, Notes_and_Activity, Final_Outcome, Testing_Notes, Invoice_Number, Customer_Number, Contact_Name, Contact_Phone, Contact_Email, Return_Qty_A, Return_Item_A, Return_Qty_B, Return_Item_B, Return_Qty_C, Return_Item_C, Return_Qty_D, Return_Item_D, Return_Credit_A, Return_Credit_B, Return_Credit_C, Return_Credit_D, Return_Ship_Method, Replace_Qty_A, Replace_Qty_B, Replace_Qty_C, Replace_Item_A, Replace_Item_B, Replace_Item_C, Replace_SO_A, Replace_SO_B, Replace_SO_C, Energy_Price_Level, Outside_Rep) output INSERTED.ID values (@CF, @rgaDate, @Order_owner, @Order_status, @RGA_Type, @Energy_or_Chem, @Reason_RGA_Open, @Complaint, @vendor_rga, @SALES_ORDER, @CUSTOMER, @Notes_and_Activity, @Final_Outcome, @Testing_Notes, @Invoice_Number, @Customer_Number, @Contact_Name, @Contact_Phone, @Contact_Email, @Return_Qty_A, @Return_Item_A, @Return_Qty_B, @Return_Item_B, @Return_Qty_C, @Return_Item_C, @Return_Qty_D, @Return_Item_D, @Return_Credit_A, @Return_Credit_B, @Return_Credit_C, @Return_Credit_D, @Return_Ship_Method, @Replace_Qty_A, @Replace_Qty_B, @Replace_Qty_C, @Replace_Item_A, @Replace_Item_B, @Replace_Item_C, @Replace_SO_A, @Replace_SO_B, @Replace_SO_C, @Energy_Price_Level, @Outside_Rep)", _con);
-                cmd = AddAllRGAParametersToCmd(ref cmd, CF, rgaDate, Order_owner, Order_status, RGA_Type, Energy_or_Chem, Reason_RGA_Open, Complaint, vendor_rga,
-    SALES_ORDER, CUSTOMER, Notes_and_Activity, Final_Outcome, Testing_Notes, Invoice_Number, Customer_Number, Contact_Name, Contact_Phone,
-    Contact_Email, Return_Qty_A, Return_Item_A, Return_Qty_B, Return_Item_B,
-    Return_Qty_C, Return_Item_C, Return_Qty_D, Return_Item_D, Return_Credit_A, Return_Credit_B, Return_Credit_C, Return_Credit_D,
-    Return_Ship_Method, Replace_Qty_A, Replace_Qty_B, Replace_Qty_C, Replace_Item_A, Replace_Item_B, Replace_Item_C, Replace_SO_A,
-    Replace_SO_B, Replace_SO_C, Energy_Price_Level, Outside_Rep);
-                _con.Open();
-                return (int)cmd.ExecuteScalar();
-            }
-            finally
-            {
-                _con.Close();
-            }
-        }
-
-        private SqlCommand AddAllRGAParametersToCmd(ref SqlCommand thisCmd, string CF, string rgaDate, string Order_owner, string Order_status, string RGA_Type, string Energy_or_Chem, string Reason_RGA_Open, string Complaint, string vendor_rga,
-string SALES_ORDER, string CUSTOMER, string Notes_and_Activity, string Final_Outcome, string Testing_Notes, string Invoice_Number, string Customer_Number, string Contact_Name, string Contact_Phone,
-string Contact_Email, string Return_Qty_A, string Return_Item_A, string Return_Qty_B, string Return_Item_B,
-string Return_Qty_C, string Return_Item_C, string Return_Qty_D, string Return_Item_D, string Return_Credit_A, string Return_Credit_B, string Return_Credit_C, string Return_Credit_D,
-string Return_Ship_Method, string Replace_Qty_A, string Replace_Qty_B, string Replace_Qty_C, string Replace_Item_A, string Replace_Item_B, string Replace_Item_C, string Replace_SO_A,
-string Replace_SO_B, string Replace_SO_C, string Energy_Price_Level, string Outside_Rep)
-        {
-            thisCmd.Parameters.AddWithValue("@CF", CF);
-            thisCmd.Parameters.AddWithValue("@rgaDate", rgaDate);
-            thisCmd.Parameters.AddWithValue("@Order_owner", Order_owner);
-            thisCmd.Parameters.AddWithValue("@Order_status", Order_status);
-            thisCmd.Parameters.AddWithValue("@RGA_Type", RGA_Type);
-            thisCmd.Parameters.AddWithValue("@Energy_or_Chem", Energy_or_Chem);
-            thisCmd.Parameters.AddWithValue("@Reason_RGA_Open", Reason_RGA_Open);
-            thisCmd.Parameters.AddWithValue("@Complaint", Complaint);
-            thisCmd.Parameters.AddWithValue("@vendor_rga", vendor_rga);
-            thisCmd.Parameters.AddWithValue("@SALES_ORDER", SALES_ORDER);
-            thisCmd.Parameters.AddWithValue("@CUSTOMER", CUSTOMER);
-            thisCmd.Parameters.AddWithValue("@Notes_and_Activity", Notes_and_Activity);
-            thisCmd.Parameters.AddWithValue("@Final_Outcome", Final_Outcome);
-            thisCmd.Parameters.AddWithValue("@Testing_Notes", Testing_Notes);
-            thisCmd.Parameters.AddWithValue("@Invoice_Number", Invoice_Number);
-            thisCmd.Parameters.AddWithValue("@Customer_Number", Customer_Number);
-            thisCmd.Parameters.AddWithValue("@Contact_Name", Contact_Name);
-            thisCmd.Parameters.AddWithValue("@Contact_Phone", Contact_Phone);
-            thisCmd.Parameters.AddWithValue("@Contact_Email", Contact_Email);
-            thisCmd.Parameters.AddWithValue("@Return_Qty_A", Return_Qty_A);
-            thisCmd.Parameters.AddWithValue("@Return_Item_A", Return_Item_A);
-            thisCmd.Parameters.AddWithValue("@Return_Qty_B", Return_Qty_B);
-            thisCmd.Parameters.AddWithValue("@Return_Item_B", Return_Item_B);
-            thisCmd.Parameters.AddWithValue("@Return_Qty_C", Return_Qty_C);
-            thisCmd.Parameters.AddWithValue("@Return_Item_C", Return_Item_C);
-            thisCmd.Parameters.AddWithValue("@Return_Qty_D", Return_Qty_D);
-            thisCmd.Parameters.AddWithValue("@Return_Item_D", Return_Item_D);
-            thisCmd.Parameters.AddWithValue("@Return_Credit_A", Return_Credit_A);
-            thisCmd.Parameters.AddWithValue("@Return_Credit_B", Return_Credit_B);
-            thisCmd.Parameters.AddWithValue("@Return_Credit_C", Return_Credit_C);
-            thisCmd.Parameters.AddWithValue("@Return_Credit_D", Return_Credit_D);
-            thisCmd.Parameters.AddWithValue("@Return_Ship_Method", Return_Ship_Method);
-            thisCmd.Parameters.AddWithValue("@Replace_Qty_A", Replace_Qty_A);
-            thisCmd.Parameters.AddWithValue("@Replace_Qty_B", Replace_Qty_B);
-            thisCmd.Parameters.AddWithValue("@Replace_Qty_C", Replace_Qty_C);
-            thisCmd.Parameters.AddWithValue("@Replace_Item_A", Replace_Item_A);
-            thisCmd.Parameters.AddWithValue("@Replace_Item_B", Replace_Item_B);
-            thisCmd.Parameters.AddWithValue("@Replace_Item_C", Replace_Item_C);
-            thisCmd.Parameters.AddWithValue("@Replace_SO_A", Replace_SO_A);
-            thisCmd.Parameters.AddWithValue("@Replace_SO_B", Replace_SO_B);
-            thisCmd.Parameters.AddWithValue("@Replace_SO_C", Replace_SO_C);
-            thisCmd.Parameters.AddWithValue("@Energy_Price_Level", Energy_Price_Level);
-            thisCmd.Parameters.AddWithValue("@Outside_Rep", Outside_Rep);
-            return thisCmd;
-        }
-
-        public DataTable GetDataTableOfRecordNumberFromDB(string recordNumber)
-        {
-            try
-            {
-                string searchID = "SELECT * FROM RgaDatabase WHERE ID LIKE '%' + @ID + '%'";
-                var adapter = new SqlDataAdapter(searchID, _con);
-                adapter.SelectCommand.Parameters.AddWithValue("ID", recordNumber);
-                _dt = new DataTable();
-                adapter.Fill(_dt);
-            }
-            finally
-            {
-                _con.Close();
-            }
-            return _dt;
-        }
-
         public DataTable GetCallLogDataTableByRecordFromDB(string recordNumber)
         {
             try
@@ -274,6 +196,7 @@ string Replace_SO_B, string Replace_SO_C, string Energy_Price_Level, string Outs
                 adapter.SelectCommand.Parameters.AddWithValue("ID", recordNumber);
                 _dt = new DataTable();
                 adapter.Fill(_dt);
+                adapter.Dispose();
             }
             finally
             {
@@ -291,22 +214,7 @@ string Replace_SO_B, string Replace_SO_C, string Energy_Price_Level, string Outs
                 adapter.SelectCommand.Parameters.AddWithValue("@search", search);
                 _dt = new DataTable();
                 adapter.Fill(_dt);
-            }
-            finally
-            {
-                _con.Close();
-            }
-            return _dt;
-        }
-
-        public DataTable GetDataTableOfRGAVersions(string rgaNum)
-        {
-            try
-            {
-                var adapter = new SqlDataAdapter("SELECT ID FROM RgaDatabase WHERE CF LIKE '%' + @CF + '%'", _con);
-                adapter.SelectCommand.Parameters.AddWithValue("CF", rgaNum);
-                _dt = new DataTable();
-                adapter.Fill(_dt);
+                adapter.Dispose();
             }
             finally
             {
@@ -330,6 +238,7 @@ string Replace_SO_B, string Replace_SO_C, string Energy_Price_Level, string Outs
                 _con.Close();
             }
         }
+
 
     }
 }

@@ -7,3 +7,11 @@ C:\Users\Kob\source\repos\DAL\obj\Debug\netstandard2.0\DAL.AssemblyInfo.cs
 C:\Users\Kob\source\repos\DAL\bin\Debug\netstandard2.0\DAL.pdb
 C:\Users\Kob\source\repos\DAL\obj\Debug\netstandard2.0\DAL.dll
 C:\Users\Kob\source\repos\DAL\obj\Debug\netstandard2.0\DAL.pdb
+C:\Users\Kob\source\repos\FarmchemCallLog\DAL\netstandard2.0\DAL.deps.json
+C:\Users\Kob\source\repos\FarmchemCallLog\DAL\netstandard2.0\DAL.dll
+C:\Users\Kob\source\repos\FarmchemCallLog\DAL\netstandard2.0\DAL.pdb
+C:\Users\Kob\source\repos\FarmchemCallLog\DAL\obj\Debug\netstandard2.0\DAL.csproj.CoreCompileInputs.cache
+C:\Users\Kob\source\repos\FarmchemCallLog\DAL\obj\Debug\netstandard2.0\DAL.AssemblyInfoInputs.cache
+C:\Users\Kob\source\repos\FarmchemCallLog\DAL\obj\Debug\netstandard2.0\DAL.AssemblyInfo.cs
+C:\Users\Kob\source\repos\FarmchemCallLog\DAL\obj\Debug\netstandard2.0\DAL.dll
+C:\Users\Kob\source\repos\FarmchemCallLog\DAL\obj\Debug\netstandard2.0\DAL.pdb

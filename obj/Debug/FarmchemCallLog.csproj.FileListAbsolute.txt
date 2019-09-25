@@ -1,6 +1,4 @@
 C:\Users\Kob\source\repos\FarmchemCallLog\obj\Debug\FarmchemCallLog.AddAddressForm.resources
-C:\Users\Kob\source\repos\FarmchemCallLog\obj\Debug\FarmchemCallLog.Form1.resources
-C:\Users\Kob\source\repos\FarmchemCallLog\obj\Debug\FarmchemCallLog.rgaForm.resources
 C:\Users\Kob\source\repos\FarmchemCallLog\obj\Debug\FarmchemCallLog.Properties.Resources.resources
 C:\Users\Kob\source\repos\FarmchemCallLog\obj\Debug\FarmchemCallLog.SearchForm.resources
 C:\Users\Kob\source\repos\FarmchemCallLog\obj\Debug\FarmchemCallLog.csproj.GenerateResource.cache
@@ -34,3 +32,8 @@ C:\Users\Kob\source\repos\FarmchemCallLog\bin\Debug\Newtonsoft.Json.xml
 C:\Users\Kob\source\repos\FarmchemCallLog\obj\Debug\FarmchemCallLog.csproj.CopyComplete
 C:\Users\Kob\source\repos\FarmchemCallLog\obj\Debug\FarmchemCallLog.exe
 C:\Users\Kob\source\repos\FarmchemCallLog\obj\Debug\FarmchemCallLog.pdb
+C:\Users\Kob\source\repos\FarmchemCallLog\obj\Debug\FarmchemCallLog.CallLogUI.resources
+C:\Users\Kob\source\repos\FarmchemCallLog\bin\Debug\BLL.dll
+C:\Users\Kob\source\repos\FarmchemCallLog\bin\Debug\BLL.pdb
+C:\Users\Kob\source\repos\FarmchemCallLog\bin\Debug\DAL.dll
+C:\Users\Kob\source\repos\FarmchemCallLog\bin\Debug\DAL.pdb
