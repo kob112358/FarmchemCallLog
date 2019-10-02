@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace FarmchemCallLog.Properties {
+namespace CallLog.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

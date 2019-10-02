@@ -15,3 +15,7 @@ C:\Users\Kob\source\repos\FarmchemCallLog\DAL\obj\Debug\netstandard2.0\DAL.Assem
 C:\Users\Kob\source\repos\FarmchemCallLog\DAL\obj\Debug\netstandard2.0\DAL.AssemblyInfo.cs
 C:\Users\Kob\source\repos\FarmchemCallLog\DAL\obj\Debug\netstandard2.0\DAL.dll
 C:\Users\Kob\source\repos\FarmchemCallLog\DAL\obj\Debug\netstandard2.0\DAL.pdb
+C:\Users\Kob\source\repos\FarmchemCallLog\DAL\obj\Debug\netstandard2.0\DAL.csprojAssemblyReference.cache
+C:\Users\Kob\source\repos\FarmchemCallLog\DAL\netstandard2.0\ClassModels.dll
+C:\Users\Kob\source\repos\FarmchemCallLog\DAL\netstandard2.0\ClassModels.pdb
+C:\Users\Kob\source\repos\FarmchemCallLog\DAL\obj\Debug\netstandard2.0\DAL.csproj.CopyComplete

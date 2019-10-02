@@ -22,3 +22,5 @@ C:\Users\Kob\source\repos\FarmchemCallLog\BLL\netstandard2.0\BLL.deps.json
 C:\Users\Kob\source\repos\FarmchemCallLog\BLL\netstandard2.0\BLL.dll
 C:\Users\Kob\source\repos\FarmchemCallLog\BLL\netstandard2.0\BLL.pdb
 C:\Users\Kob\source\repos\FarmchemCallLog\BLL\obj\Debug\netstandard2.0\BLL.csprojAssemblyReference.cache
+C:\Users\Kob\source\repos\FarmchemCallLog\BLL\netstandard2.0\ClassModels.dll
+C:\Users\Kob\source\repos\FarmchemCallLog\BLL\netstandard2.0\ClassModels.pdb

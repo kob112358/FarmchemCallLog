@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace FarmchemCallLog.Properties {
+namespace CallLog.Properties {
     using System;
     
     

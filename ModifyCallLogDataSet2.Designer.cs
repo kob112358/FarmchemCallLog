@@ -10,7 +10,7 @@
 
 #pragma warning disable 1591
 
-namespace FarmchemCallLog {
+namespace CallLog {
     
     
     /// <summary>
@@ -1229,7 +1229,7 @@ namespace FarmchemCallLog {
         }
     }
 }
-namespace FarmchemCallLog.ModifyCallLogDataSet2TableAdapters {
+namespace CallLog.ModifyCallLogDataSet2TableAdapters {
     
     
     /// <summary>
@@ -1395,7 +1395,7 @@ namespace FarmchemCallLog.ModifyCallLogDataSet2TableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = global::FarmchemCallLog.Properties.Settings.Default.ModifyCallLogConnectionString;
+            this._connection.ConnectionString = global::CallLog.Properties.Settings.Default.ModifyCallLogConnectionString;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

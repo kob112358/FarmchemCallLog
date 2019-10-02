@@ -2,243 +2,301 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using CallLog;
+using System.Linq;
+using ClassModels.CallClasses;
 
 namespace DAL
 {
     public class DataAccessLayer
     {
-        private readonly SqlConnection _con = new SqlConnection("data source=kobpc\\sqlexpress;initial catalog=modifycalllog;integrated security=true;Connect Timeout=60");
-        private DataTable _dt;
-
-
-        public List<string> PopulateNameField(string phone)
+        
+        public List<Address> PopulateCompanyCityStateZip(string code)
         {
-            var adapter = new SqlDataAdapter("SELECT contactName, COUNT(contactName) AS MOST_FREQUENT FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' GROUP BY contactName ORDER BY MOST_FREQUENT DESC", _con);
-            adapter.SelectCommand.Parameters.AddWithValue("contactPhone", phone);
-            var returnList = GenerateListForComboboxFromDB(adapter, "contactName");
-            adapter.Dispose();
-            return returnList;
+            try
+            {
+                using (var context = new CallContext())
+                {
+                    return context.Calls
+                        .Where(s => s.Bus.CustomerCode == code)
+                        .Select(s => new Address()
+                        {
+                            City = s.Add.City,
+                            State = s.Add.State,
+                            Zip = s.Add.Zip
+                        })
+                        .OrderBy(s => s.City)
+                        .Distinct()
+                        .ToList();
+                }
+            }
+            catch(Exception ex)
+            {
+                throw (ex);
+            }
         }
-
-        public List<string> PopulateNameNotes(string phone, string name)
+        public List<DTCall> GetCallLogDataTableBySearchFromDB(string search)
         {
-            var adapter = new SqlDataAdapter("SELECT customerNotes FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' AND contactName LIKE '%' + @contactName + '%'", _con);
-            adapter.SelectCommand.Parameters.AddWithValue("contactPhone", phone);
-            adapter.SelectCommand.Parameters.AddWithValue("contactName", name);
-            var returnList = GenerateListForComboboxFromDB(adapter, "customerNotes");
-            adapter.Dispose();
-            return returnList;
+            try
+            {
+                using (var context = new CallContext())
+                {
+                    return context.Calls
+                        .Where(s => s.Add.City.Contains(search) || s.Add.State.Contains(search) || s.Add.Zip.Contains(search) || s.Bus.CompanyName.Contains(search) || s.Bus.CompanyNotes.Contains(search) ||
+                          s.Bus.CustomerCode.Contains(search) || s.Bus.OutsideRep.Contains(search) || s.CallInformation.CallNotes.Contains(search) || s.CallInformation.ReasonForCall.Contains(search) ||
+                          s.Cust.ContactName.Contains(search) || s.Cust.CustomerNotes.Contains(search) || s.Cust.Phone.Contains(search) || s.Cust.Email.Contains(search))
+                        .Select(s => new DTCall()
+                        {
+                            CallID = s.CallID,
+                            CallDate = s.CallInformation.CallDate,
+                            ContactName = s.Cust.ContactName,
+                            CompanyName = s.Bus.CompanyName,
+                            City = s.Add.City,
+                            State = s.Add.State,
+                            CallNotes = s.CallInformation.CallNotes,
+                            CallResolved = s.CallInformation.CallResolved
+                        })
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
         }
-
-        public List<string> PopulateBusinessNotes(string phone, string code)
+        public Call GetCallByRecordFromDB(int recordNumber)
         {
-            var adapter = new SqlDataAdapter("SELECT businessNotes FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' AND customerCode LIKE '%' + @customerCode + '%'", _con);
-            adapter.SelectCommand.Parameters.AddWithValue("contactPhone", phone);
-            adapter.SelectCommand.Parameters.AddWithValue("customerCode", code);
-            var returnList = GenerateListForComboboxFromDB(adapter, "businessNotes");
-            adapter.Dispose();
-            return returnList;
+            try
+            {
+                using (var context = new CallContext())
+                {
+                    return context.Calls
+                        .Where(s => s.CallID == recordNumber)
+                        .Select(s => new Call()
+                        {
+                            Add = new Address()
+                            {
+                                City = s.Add.City,
+                                State = s.Add.State,
+                                Zip = s.Add.Zip
+                            },
+                            Bus = new Business()
+                            {
+                                CompanyName = s.Bus.CompanyName,
+                                CompanyNotes = s.Bus.CompanyNotes,
+                                CustomerCode = s.Bus.CustomerCode,
+                                OutsideRep = s.Bus.OutsideRep
+                            },
+                            CallInformation = new CallInfo()
+                            {
+                                CallDate = s.CallInformation.CallDate,
+                                CallNotes = s.CallInformation.CallNotes,
+                                CallResolved = s.CallInformation.CallResolved,
+                                ReasonForCall = s.CallInformation.ReasonForCall
+                            },
+                            Cust = new Customer()
+                            {
+                                ContactName = s.Cust.ContactName,
+                                Email = s.Cust.Email,
+                                Phone = s.Cust.Phone
+                            }
+                        })
+                        .Last();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
         }
-
-
-        public List<string> PopulateCustomerEmail(string phone, string name)
+        public int UpdateCallLogRecord(Call cal)
         {
-            var adapter = new SqlDataAdapter("SELECT contactEmail, COUNT(contactEmail) AS MOST_FREQUENT FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' AND contactName LIKE '%' + @contactName + '%' GROUP BY contactEmail ORDER BY MOST_FREQUENT DESC", _con);
-            adapter.SelectCommand.Parameters.AddWithValue("contactPhone", phone);
-            adapter.SelectCommand.Parameters.AddWithValue("contactName", name);
-            var returnList = GenerateListForComboboxFromDB(adapter, "contactEmail");
-            adapter.Dispose();
-            return returnList;
+            try
+            {
+                using (var context = new CallContext())
+                {
+                    context.Update<Call>(cal);
+                    return context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
         }
-
-        public List<string> PopulateCustomerCode(string phone, string name)
+        public int SaveToDatabase(Call cal)
         {
-            var adapter = new SqlDataAdapter("SELECT customerCode, COUNT(customerCode) AS MOST_FREQUENT FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' AND contactName LIKE '%' + @contactName + '%' GROUP BY customerCode ORDER BY MOST_FREQUENT DESC", _con);
-            adapter.SelectCommand.Parameters.AddWithValue("contactPhone", phone);
-            adapter.SelectCommand.Parameters.AddWithValue("contactName", name);
-            var returnList = GenerateListForComboboxFromDB(adapter, "customerCode");
-            adapter.Dispose();
-            return returnList;
+            try
+            {
+                using (var context = new CallContext())
+                {
+                    context.Add(cal);
+                    return context.SaveChanges();
+                }
+            }
+            catch
+            {
+                return 0;
+            }
         }
-
-        public List<string> PopulateCompanyName(string code)
-        {
-            var adapter = new SqlDataAdapter("SELECT TOP (1) companyName FROM modify_data_calllog WHERE customerCode LIKE '%' + @customerCode + '%' GROUP BY companyName ORDER BY companyName DESC", _con);
-            adapter.SelectCommand.Parameters.AddWithValue("customerCode", code);
-            var returnList = GenerateListForComboboxFromDB(adapter, "companyName");
-            adapter.Dispose();
-            return returnList;
-        }
-
-        public List<string> PopulateCompanyCityStateZip(string code)
-        {
-            var adapter = new SqlDataAdapter("SELECT companyCityStateZip, COUNT(companyCityStateZip) AS MOST_FREQUENT FROM modify_data_calllog WHERE customerCode LIKE '%' + @customerCode + '%' GROUP BY companyCityStatezip ORDER BY MOST_FREQUENT DESC", _con);
-            adapter.SelectCommand.Parameters.AddWithValue("customerCode", code);
-            var returnList = GenerateListForComboboxFromDB(adapter, "companyCityStateZip");
-            adapter.Dispose();
-            return returnList;
-        }
-
-
-        public string PopulateCompanyCity(string phone, string code)
-        {
-            var adapter = new SqlDataAdapter("SELECT TOP (3) companyCity FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' AND customerCode LIKE '%' + @customerCode + '%' GROUP BY companyCity ORDER BY COUNT(companyCity) DESC", _con);
-            adapter.SelectCommand.Parameters.AddWithValue("customerCode", code);
-            adapter.SelectCommand.Parameters.AddWithValue("contactPhone", phone);
-            var returnString = GenerateListForComboboxFromDB(adapter, "companyCity")[0];
-            adapter.Dispose();
-            return returnString;
-        }
-
-        public string PopulateCompanyState(string phone, string code)
-        {
-            var adapter = new SqlDataAdapter("SELECT TOP (3) companyState FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' AND customerCode LIKE '%' + @customerCode + '%' GROUP BY companyState ORDER BY COUNT(companyState) DESC", _con);
-            adapter.SelectCommand.Parameters.AddWithValue("customerCode", code);
-            adapter.SelectCommand.Parameters.AddWithValue("contactPhone", phone);
-            var returnString = GenerateListForComboboxFromDB(adapter, "companyState")[0];
-            adapter.Dispose();
-            return returnString;
-        }
-
         public string PopulateCompanyZip(string phone, string code)
         {
-            var adapter = new SqlDataAdapter("SELECT TOP (3) companyZip FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' AND customerCode LIKE '%' + @customerCode + '%' GROUP BY companyZip ORDER BY COUNT(companyZip) DESC", _con);
-            adapter.SelectCommand.Parameters.AddWithValue("customerCode", code);
-            adapter.SelectCommand.Parameters.AddWithValue("contactPhone", phone);
-            var returnString = GenerateListForComboboxFromDB(adapter, "companyZip")[0];
-            adapter.Dispose();
-            return returnString;
-        }
-
-        public List<string> GenerateListForComboboxFromDB(SqlDataAdapter da, string field)
-        {
-            _dt = new DataTable();
-            da.Fill(_dt);
-            List<string> itemList = new List<string>();
-            for (int i = 0; i < _dt.Rows.Count; i++)
+            try
             {
-                if (_dt.Rows[i][field].ToString() == "" || _dt.Rows[i][field].ToString() == null)
+                using (var context = new CallContext())
                 {
-                    continue;
-                }
-                else
+
+                    return context.Calls
+                        .Where(s => s.Cust.Phone == phone)
+                        .Where(s => s.Bus.CustomerCode == code)
+                        .Select(s => s.Add.Zip)
+                        .FirstOrDefault();
+                };
+            }
+            catch(Exception ex)
+            {
+                throw (ex);
+            }
+        }
+        public string[] PopulateNameField(string phone)
+        {
+            try
+            {
+                using (var context = new CallContext())
                 {
-                    itemList.Add(_dt.Rows[i][field].ToString());
+                    return context.Calls
+                        .Where(s => s.Cust.Phone == phone)
+                        .Select(s => s.Cust.ContactName)
+                        .Distinct()
+                        .ToArray();
                 }
             }
-            if(itemList.Count < 1)
+            catch (Exception ex)
             {
-                itemList.Add("");
+                throw (ex);
             }
-            return itemList;
         }
-
-        public DataTable PopulateDataGridViewByPhoneCompanyCity(string phone, string company, string city)
+        public string PopulateNameNotes(string phone, string name)
         {
             try
             {
-                var adapter = new SqlDataAdapter("SELECT * FROM modify_data_calllog WHERE contactPhone LIKE '%' + @contactPhone + '%' OR (companyName LIKE '%' + @companyName + '%' AND companyCity LIKE '%' + @companyCity + '%')", _con);
-                adapter.SelectCommand.Parameters.AddWithValue("contactPhone", phone);
-                adapter.SelectCommand.Parameters.AddWithValue("companyName", company);
-                adapter.SelectCommand.Parameters.AddWithValue("companyCity", city);
-                _dt = new DataTable();
-                adapter.Fill(_dt);
-                adapter.Dispose();
-            }
-            catch (Exception)
-            {
+                using (var context = new CallContext())
+                {
+                    return context.Calls
+                        .Where(s => s.Cust.Phone == phone)
+                        .Where(s => s.Cust.ContactName == name)
+                        .Select(s => s.Cust.CustomerNotes)
+                        .Last();
 
-                throw;
+                }
             }
-            return _dt;
-        }
-
-        public int SaveToDatabase(string phone, string contactName, string email, string code, string companyName, string city, string state, string zip, string reason, string notes, string date, string rep, string contactnotes, string businessNotes)
-        {
-            var cmd = new SqlCommand("insert into modify_data_CallLog(contactPhone,contactName,contactEmail,customercode,companyName,companyCity,companyState,companyZip,reasonForCall,notesParagraph,callDate,outsideRep,customerNotes,businessNotes) values (@contactPhone, @contactName, @contactEmail, @customerCode, @companyName, @companyCity, @companyState, @companyZip, @reasonForCall, @notesParagraph, @callDate, @outsideRep, @customerNotes, @businessNotes)", _con);
-            AddCallLogParamtersToCmd(ref cmd, phone, contactName, email, code, companyName, city, state, zip, reason, notes, date, rep, contactnotes, businessNotes);
-            try
+            catch (Exception ex)
             {
-                _con.Open();
-                return cmd.ExecuteNonQuery();
-            }
-            finally
-            {
-                _con.Close();
+                throw (ex);
             }
         }
-
-        private SqlCommand AddCallLogParamtersToCmd(ref SqlCommand thisCmd, string phone, string contactName, string email, string code, string companyName, string city, string state, string zip, string reason, string notes, string date, string rep, string contactNotes, string businessNotes)
-        {
-            thisCmd.Parameters.AddWithValue("@contactPhone", phone);
-            thisCmd.Parameters.AddWithValue("@contactName", contactName);
-            thisCmd.Parameters.AddWithValue("@contactEmail", email);
-            thisCmd.Parameters.AddWithValue("@customerCode", code);
-            thisCmd.Parameters.AddWithValue("@companyName", companyName);
-            thisCmd.Parameters.AddWithValue("@companyCity", city);
-            thisCmd.Parameters.AddWithValue("@companyState", state);
-            thisCmd.Parameters.AddWithValue("@companyZip", zip);
-            thisCmd.Parameters.AddWithValue("@reasonForCall", reason);
-            thisCmd.Parameters.AddWithValue("@notesParagraph", notes);
-            thisCmd.Parameters.AddWithValue("@callDate", date);
-            thisCmd.Parameters.AddWithValue("@outsideRep", rep);
-            thisCmd.Parameters.AddWithValue("@customerNotes", contactNotes);
-            thisCmd.Parameters.AddWithValue("@businessnotes", businessNotes);
-            return thisCmd;
-        }
-
-        public DataTable GetCallLogDataTableByRecordFromDB(string recordNumber)
-        {
-            try
-            { 
-                string searchID = "SELECT * FROM modify_data_CallLog WHERE ID LIKE '%' + @ID + '%'";
-                var adapter = new SqlDataAdapter(searchID, _con);
-                adapter.SelectCommand.Parameters.AddWithValue("ID", recordNumber);
-                _dt = new DataTable();
-                adapter.Fill(_dt);
-                adapter.Dispose();
-            }
-            finally
-            {
-                _con.Close();
-            }
-            return _dt;
-        }
-
-        public DataTable GetCallLogDataTableBySearchFromDB(string search)
+        public string PopulateBusinessNote(string code)
         {
             try
             {
-                string searchID = "SELECT * FROM modify_data_CallLog WHERE CONCAT(contactPhone,contactName,contactEmail,customercode,companyName,companyCity,companyState,companyZip,reasonForCall,notesParagraph,callDate,outsideRep,customerNotes,businessNotes)  LIKE '%' + @search + '%'";
-                var adapter = new SqlDataAdapter(searchID, _con);
-                adapter.SelectCommand.Parameters.AddWithValue("@search", search);
-                _dt = new DataTable();
-                adapter.Fill(_dt);
-                adapter.Dispose();
+                using (var context = new CallContext())
+                {
+                    return context.Calls
+                        .Where(s => s.Bus.CustomerCode == code)
+                        .Select(s => s.Bus.CompanyNotes)
+                        .Last();
+                }
             }
-            finally
+            catch (Exception ex)
             {
-                _con.Close();
+                throw (ex);
             }
-            return _dt;
         }
-
-        public int UpdateCallLogRecord(int ID, string phone, string contactName, string email, string code, string companyName, string city, string state, string zip, string reason, string notes, string date, string rep, string contactnotes, string businessNotes)
+        public List<string> PopulateCustomerCode(string phone, string name)
         {
-            var cmd = new SqlCommand("UPDATE modify_data_CallLog SET contactPhone = @contactPhone,contactName = @contactName,contactEmail = @contactEmail,customercode = @customerCode,companyName = @companyName,companyCity = @companyCity,companyState = @companyState,companyZip = @companyZip,reasonForCall = @reasonForCall,notesParagraph = @notesParagraph,callDate = @callDate,customerNotes = @customerNotes,businessNotes = @businessNotes WHERE ID = @ID", _con);
-            AddCallLogParamtersToCmd(ref cmd, phone, contactName, email, code, companyName, city, state, zip, reason, notes, date, rep, contactnotes, businessNotes);
-            cmd.Parameters.AddWithValue("@ID", ID);
             try
             {
-                _con.Open();
-                return cmd.ExecuteNonQuery();
+                using (var context = new CallContext())
+                {
+                    return context.Calls
+                        .Where(s => s.Cust.Phone == phone)
+                        .Where(s => s.Cust.ContactName == name)
+                        .Select(s => s.Bus.CustomerCode)
+                        .OrderBy(s => s.Count())
+                        .Distinct()
+                        .ToList();
+                }
             }
-            finally
+            catch (Exception ex)
             {
-                _con.Close();
+                throw (ex);
             }
         }
-
-
+        public string PopulateCompanyName(string code)
+        {
+            try
+            {
+                using (var context = new CallContext())
+                {
+                    return context.Calls
+                        .Where(s => s.Bus.CustomerCode == code)
+                        .Select(s => s.Bus.CompanyName)
+                        .Last();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+        }
+        public List<string> PopulateCustomerEmail(string phone, string name)
+        {
+            try
+            {
+                using (var context = new CallContext())
+                {
+                    return context.Calls
+                        .Where(s => s.Cust.Phone == phone)
+                        .Where(s => s.Cust.ContactName == name)
+                        .OrderBy(s => s.Cust.Email)
+                        .Select(s => s.Cust.Email)
+                        .Distinct()
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+        }
+        public List<DTCall> GetGridViewAllAtOnce(string phone, string company, string city)
+        {
+            try
+            {
+                using (var context = new CallContext())
+                {
+                    return context.Calls
+                        .Where(s => s.Cust.Phone == phone)
+                        .Where(s => s.Bus.CompanyName == company)
+                        .Where(s => s.Add.City == city)
+                        .Select(s => new DTCall()
+                        {
+                            CallID = s.CallID,
+                            CallDate = s.CallInformation.CallDate,
+                            ContactName = s.Cust.ContactName,
+                            CompanyName = s.Bus.CompanyName,
+                            City = s.Add.City,
+                            State = s.Add.State,
+                            CallNotes = s.CallInformation.CallNotes,
+                            CallResolved = s.CallInformation.CallResolved
+                        })
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+        }
     }
 }
