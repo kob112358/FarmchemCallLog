@@ -94,6 +94,7 @@
             this.notesParagraph.Size = new System.Drawing.Size(448, 215);
             this.notesParagraph.TabIndex = 9;
             this.notesParagraph.Text = "";
+            this.notesParagraph.Validating += new System.ComponentModel.CancelEventHandler(this.NotesParagraph_Validating);
             // 
             // label9
             // 
@@ -171,6 +172,7 @@
             this.repEmail.Name = "repEmail";
             this.repEmail.Size = new System.Drawing.Size(207, 21);
             this.repEmail.TabIndex = 8;
+            this.repEmail.Validating += new System.ComponentModel.CancelEventHandler(this.RepEmail_Validating);
             // 
             // btnNewCall
             // 
@@ -199,12 +201,14 @@
             // completedAnswer
             // 
             this.completedAnswer.AutoSize = true;
+            this.completedAnswer.CausesValidation = false;
             this.completedAnswer.Location = new System.Drawing.Point(507, 411);
             this.completedAnswer.Name = "completedAnswer";
             this.completedAnswer.Size = new System.Drawing.Size(91, 17);
             this.completedAnswer.TabIndex = 12;
             this.completedAnswer.Text = "Call Resolved";
             this.completedAnswer.UseVisualStyleBackColor = true;
+            this.completedAnswer.Validating += new System.ComponentModel.CancelEventHandler(this.CompletedAnswer_Validating);
             // 
             // callDate
             // 
@@ -220,7 +224,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(312, 59);
+            this.label3.Location = new System.Drawing.Point(312, 16);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(82, 13);
             this.label3.TabIndex = 5;
@@ -229,7 +233,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(150, 59);
+            this.label7.Location = new System.Drawing.Point(311, 56);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(75, 13);
             this.label7.TabIndex = 11;
@@ -268,7 +272,7 @@
             // 
             this.contactEmail.CausesValidation = false;
             this.contactEmail.FormattingEnabled = true;
-            this.contactEmail.Location = new System.Drawing.Point(150, 75);
+            this.contactEmail.Location = new System.Drawing.Point(311, 72);
             this.contactEmail.Name = "contactEmail";
             this.contactEmail.Size = new System.Drawing.Size(155, 21);
             this.contactEmail.TabIndex = 2;
@@ -282,13 +286,12 @@
             this.customerCode.Name = "customerCode";
             this.customerCode.Size = new System.Drawing.Size(122, 21);
             this.customerCode.TabIndex = 3;
-            this.customerCode.LostFocus += new System.EventHandler(this.CustomerCode_LostFocus);
             this.customerCode.Validating += new System.ComponentModel.CancelEventHandler(this.CustomerCode_Validating);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(312, 16);
+            this.label1.Location = new System.Drawing.Point(151, 56);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(75, 13);
             this.label1.TabIndex = 9;
@@ -298,16 +301,17 @@
             // 
             this.companyName.CausesValidation = false;
             this.companyName.FormattingEnabled = true;
-            this.companyName.Location = new System.Drawing.Point(311, 75);
+            this.companyName.Location = new System.Drawing.Point(311, 32);
             this.companyName.Name = "companyName";
             this.companyName.Size = new System.Drawing.Size(155, 21);
             this.companyName.TabIndex = 4;
+            this.companyName.Validating += new System.ComponentModel.CancelEventHandler(this.CompanyName_Validating);
             // 
             // contactName
             // 
             this.contactName.CausesValidation = false;
             this.contactName.FormattingEnabled = true;
-            this.contactName.Location = new System.Drawing.Point(311, 32);
+            this.contactName.Location = new System.Drawing.Point(150, 72);
             this.contactName.Name = "contactName";
             this.contactName.Size = new System.Drawing.Size(155, 21);
             this.contactName.TabIndex = 1;
@@ -393,7 +397,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(12, 317);
+            this.button3.Location = new System.Drawing.Point(12, 304);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(100, 40);
             this.button3.TabIndex = 16;
@@ -404,7 +408,7 @@
             // callRecordNum
             // 
             this.callRecordNum.AutoSize = true;
-            this.callRecordNum.Location = new System.Drawing.Point(12, 255);
+            this.callRecordNum.Location = new System.Drawing.Point(12, 394);
             this.callRecordNum.Name = "callRecordNum";
             this.callRecordNum.Size = new System.Drawing.Size(75, 13);
             this.callRecordNum.TabIndex = 50;
@@ -420,7 +424,7 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(12, 363);
+            this.button5.Location = new System.Drawing.Point(12, 350);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(100, 40);
             this.button5.TabIndex = 18;
@@ -430,7 +434,7 @@
             // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(12, 271);
+            this.btnSearch.Location = new System.Drawing.Point(12, 258);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(100, 40);
             this.btnSearch.TabIndex = 15;
@@ -469,7 +473,7 @@
             // 
             this.callRecord.AutoSize = true;
             this.callRecord.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.callRecord.Location = new System.Drawing.Point(87, 255);
+            this.callRecord.Location = new System.Drawing.Point(87, 394);
             this.callRecord.Name = "callRecord";
             this.callRecord.Size = new System.Drawing.Size(0, 13);
             this.callRecord.TabIndex = 56;

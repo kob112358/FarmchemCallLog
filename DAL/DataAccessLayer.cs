@@ -139,25 +139,7 @@ namespace DAL
                 return 0;
             }
         }
-        public string PopulateCompanyZip(string phone, string code)
-        {
-            try
-            {
-                using (var context = new CallContext())
-                {
 
-                    return context.Calls
-                        .Where(s => s.Cust.Phone == phone)
-                        .Where(s => s.Bus.CustomerCode == code)
-                        .Select(s => s.Add.Zip)
-                        .FirstOrDefault();
-                };
-            }
-            catch(Exception ex)
-            {
-                throw (ex);
-            }
-        }
         public string[] PopulateNameField(string phone)
         {
             try
@@ -212,7 +194,7 @@ namespace DAL
                 throw (ex);
             }
         }
-        public List<string> PopulateCustomerCode(string phone, string name)
+        public string PopulateCustomerCode(string phone, string name)
         {
             try
             {
@@ -222,9 +204,7 @@ namespace DAL
                         .Where(s => s.Cust.Phone == phone)
                         .Where(s => s.Cust.ContactName == name)
                         .Select(s => s.Bus.CustomerCode)
-                        .OrderBy(s => s.Count())
-                        .Distinct()
-                        .ToList();
+                        .Last();
                 }
             }
             catch (Exception ex)
@@ -249,7 +229,7 @@ namespace DAL
                 throw (ex);
             }
         }
-        public List<string> PopulateCustomerEmail(string phone, string name)
+        public string PopulateCustomerEmail(string phone, string name)
         {
             try
             {
@@ -260,8 +240,7 @@ namespace DAL
                         .Where(s => s.Cust.ContactName == name)
                         .OrderBy(s => s.Cust.Email)
                         .Select(s => s.Cust.Email)
-                        .Distinct()
-                        .ToList();
+                        .Last();
                 }
             }
             catch (Exception ex)
@@ -269,16 +248,14 @@ namespace DAL
                 throw (ex);
             }
         }
-        public List<DTCall> GetGridViewAllAtOnce(string phone, string company, string city)
+        public List<DTCall> GetGridViewFromPhoneCompany(string phone, string company)
         {
             try
             {
                 using (var context = new CallContext())
                 {
                     return context.Calls
-                        .Where(s => s.Cust.Phone == phone)
-                        .Where(s => s.Bus.CompanyName == company)
-                        .Where(s => s.Add.City == city)
+                        .Where(s => s.Cust.Phone == phone || s.Bus.CompanyName == company)
                         .Select(s => new DTCall()
                         {
                             CallID = s.CallID,

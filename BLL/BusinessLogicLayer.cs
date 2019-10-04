@@ -18,7 +18,7 @@ namespace BLL
     public class BusinessLogicLayer
     {
         readonly DataAccessLayer dal = new DataAccessLayer();
-        private const string _EXCEPTIONFILEPATH = "C:\\temp\\CallLogError.txt";
+        private const string _EXCEPTIONFILEPATH = "C:\\Windows\\temp\\CallLogError.txt";
 
         public List<Address> GetCompanyCityStateZip(string code)
         {
@@ -162,24 +162,24 @@ namespace BLL
             }
         }
 
-        public string[] GetCustomerEmail(string phone, string name)
+        public string GetCustomerEmail(string phone, string name)
         {
             try
             {
                 var emailList = dal.PopulateCustomerEmail(phone.Trim(), name.Trim());
-                if (emailList.Count == 0 || phone.Length == 0 || name.Length == 0)
+                if (String.IsNullOrEmpty(emailList) || phone.Length == 0 || name.Length == 0)
                 {
-                    return new string[1] { "" };
+                    return "";
                 }
                 else
                 {
-                    return emailList.ToArray();
+                    return emailList;
                 }
             }
             catch (Exception ex)
             {
                 LogError(ex);
-                return new string[1] { "" };
+                return "";
             }
         }
         public string GetBusinessNotes(string code)
@@ -206,21 +206,21 @@ namespace BLL
                 return "";
             }
         }
-        public string[] GetCustomerCode(string phone, string name)
+        public string GetCustomerCode(string phone, string name)
         {
             try
             {
                 var customerCodeList = dal.PopulateCustomerCode(phone.Trim(), name.Trim());
-                if (phone.Length == 0 || name.Length == 0 || customerCodeList.Count == 0)
+                if (phone.Length == 0 || name.Length == 0 || String.IsNullOrEmpty(customerCodeList))
                 {
-                    return new string[1] { "" };
+                    return "";
                 }
-                return customerCodeList.ToArray();
+                return customerCodeList;
             }
             catch (Exception ex)
             {
                 LogError(ex);
-                return new string[1] { "" };
+                return "";
             }
         }
         public string GetCompanyName(string code)
@@ -240,15 +240,15 @@ namespace BLL
             }
         }
 
-        public List<DTCall> GetGridViewDataByPhoneCompanyCity(string phone, string company, string city)
+        public List<DTCall> GetGridViewDataByPhoneCompany(string phone, string company)
         {
             try
             {
-                if (phone.Length == 0 || company.Length == 0 || city.Length == 0)
+                if (phone.Length == 0 || company.Length == 0)
                 {
                     return null;
                 }
-                return dal.GetGridViewAllAtOnce(phone.Trim(), company.Trim(), city.Trim());
+                return dal.GetGridViewFromPhoneCompany(phone.Trim(), company.Trim());
             }
             catch (Exception ex)
             {
