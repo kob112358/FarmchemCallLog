@@ -275,7 +275,7 @@
         <member name="M:FluentValidation.DefaultValidatorExtensions.NotEmpty``2(FluentValidation.IRuleBuilder{``0,``1})">
             <summary>
             Defines a 'not empty' validator on the current rule builder.
-            Validation will fail if the property is null, an empty or the default value for the type (for example, 0 for integers)
+            Validation will fail if the property is null, an empty string, whitespace, an empty collection or the default value for the type (for example, 0 for integers but null for nullable integers)
             </summary>
             <typeparam name="T">Type of object being validated</typeparam>
             <typeparam name="TProperty">Type of property being validated</typeparam>
@@ -423,6 +423,16 @@
             </summary>
             <typeparam name="T">Type of object being validated</typeparam>
             <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+            <returns></returns>
+        </member>
+        <member name="M:FluentValidation.DefaultValidatorExtensions.EmailAddress``1(FluentValidation.IRuleBuilder{``0,System.String},FluentValidation.Validators.EmailValidationMode)">
+            <summary>
+            Defines a regular expression validator on the current rule builder, but only for string properties.
+            Validation will fail if the value returned by the lambda is not a valid email address.
+            </summary>
+            <typeparam name="T">Type of object being validated</typeparam>
+            <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+            <param name="mode">The mode to use for email validation. If set to <see cref="F:FluentValidation.Validators.EmailValidationMode.Net4xRegex"/>, then a regular expression will be used. This is the same regex used by <see cref="T:System.ComponentModel.DataAnnotations.EmailAddressAttribute"/> in .NET 4.x. If set to <see cref="F:FluentValidation.Validators.EmailValidationMode.AspNetCoreCompatible"/> then this uses the simplified ASP.NET Core logic for checking an email address, which just checks for the presence of an @ sign.</param>
             <returns></returns>
         </member>
         <member name="M:FluentValidation.DefaultValidatorExtensions.NotEqual``2(FluentValidation.IRuleBuilder{``0,``1},``1,System.Collections.IEqualityComparer)">
@@ -1029,6 +1039,17 @@
             <param name="enumType">The enum whose the string should match any name</param>
             <param name="caseSensitive">If the comparison between the string and the enum names should be case sensitive</param>
             <returns></returns>
+        </member>
+        <member name="M:FluentValidation.DefaultValidatorExtensions.ChildRules``2(FluentValidation.IRuleBuilder{``0,``1},System.Action{FluentValidation.InlineValidator{``1}})">
+            <summary>
+            Defines child rules for a nested property.
+            </summary>
+            <param name="ruleBuilder">The rule builder.</param>
+            <param name="action">Callback that will be invoked to build the rules.</param>
+            <typeparam name="T"></typeparam>
+            <typeparam name="TProperty"></typeparam>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
         </member>
         <member name="T:FluentValidation.DefaultValidatorOptions">
             <summary>
@@ -3148,6 +3169,21 @@
             Adds a new validation failure
             </summary>
             <param name="failure">The failure to add</param>
+        </member>
+        <member name="T:FluentValidation.Validators.EmailValidationMode">
+            <summary>
+            Defines which mode should be used for email validation.
+            </summary>
+        </member>
+        <member name="F:FluentValidation.Validators.EmailValidationMode.Net4xRegex">
+            <summary>
+            Uses a regular expression for email validation. This is the same regex used by <see cref="T:System.ComponentModel.DataAnnotations.EmailAddressAttribute"/> in .NET 4.x.
+            </summary>
+        </member>
+        <member name="F:FluentValidation.Validators.EmailValidationMode.AspNetCoreCompatible">
+            <summary>
+            Uses the simplified ASP.NET Core logic for checking an email address, which just checks for the presence of an @ sign.
+            </summary>
         </member>
         <member name="T:FluentValidation.Validators.IPropertyValidator">
             <summary>

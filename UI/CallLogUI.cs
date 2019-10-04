@@ -1,13 +1,12 @@
-﻿using System;
+﻿using BLL;
+using ClassModels.CallClasses;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Windows.Forms;
-using System.Text.RegularExpressions;
-using Outlook = Microsoft.Office.Interop.Outlook;
-using BLL;
-using ClassModels.CallClasses;
 using System.IO;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
+using Outlook = Microsoft.Office.Interop.Outlook;
 
 namespace CallLog
 {
@@ -76,7 +75,7 @@ namespace CallLog
                 contactEmail.Text = "";
                 contactEmail.Items.Clear();
                 contactEmail.Items.Add(bll.GetCustomerEmail(contactPhone.Text, contactName.Text));
-                contactEmail.Text = contactEmail.Items[contactEmail.Items.Count-1].ToString();
+                contactEmail.Text = contactEmail.Items[contactEmail.Items.Count - 1].ToString();
             }
             catch (Exception ex)
             {
@@ -526,7 +525,6 @@ namespace CallLog
                 using (StreamWriter writer = new StreamWriter(_EXCEPTIONFILEPATH, true))
                 {
                     writer.WriteLine(message);
-                    writer.Close();
                 }
             }
             catch

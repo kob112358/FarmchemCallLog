@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace CallLog
 {
     public class CallContext : DbContext
     {
         public DbSet<Call> Calls { get; set; }
-        
+
         public CallContext()
         {
 

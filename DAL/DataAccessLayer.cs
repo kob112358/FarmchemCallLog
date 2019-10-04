@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using CallLog;
-using System.Linq;
+﻿using CallLog;
 using ClassModels.CallClasses;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DAL
 {
     public class DataAccessLayer
     {
-        
+
         public List<Address> PopulateCompanyCityStateZip(string code)
         {
             try
@@ -30,7 +28,7 @@ namespace DAL
                         .ToList();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw (ex);
             }
