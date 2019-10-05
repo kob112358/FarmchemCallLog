@@ -1,7 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\DAL",
+    "\\Properties"
   ],
-  "SelectedNode": "\\Form2.cs",
+  "SelectedNode": "\\CallLogUI.csproj",
   "PreviewInSolutionExplorer": false
 }
